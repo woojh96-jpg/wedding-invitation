@@ -3,22 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>정호 ♥ 영서</title>
+<title>정호 ♥ 민지</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     height: 100%; width: 100%;
     font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-    background: #000; color: #fff;
+    background: #1a1a1a; color: #fff;
     overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
   }
 
   /* ── 전체 컨테이너 ── */
   .app {
     width: 100%; max-width: 430px;
-    height: 100vh; margin: 0 auto;
+    height: 100vh; max-height: 932px;
+    margin: 0 auto;
     position: relative; overflow: hidden;
     background: #0a0a0a;
+    border-radius: 0;
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+  }
+
+  @media (min-width: 431px) {
+    .app {
+      border-radius: 44px;
+      height: 92vh;
+      max-height: 860px;
+    }
   }
 
   /* ════════════════════════════════
@@ -156,13 +168,24 @@
     position: absolute; inset: 0; z-index: 10;
     opacity: 0; pointer-events: none;
     transition: opacity 1s ease 0.3s;
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     background: #f0ece6;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
   }
+  #main-section::-webkit-scrollbar { display: none; }
   #main-section.visible {
     opacity: 1; pointer-events: auto;
+  }
+
+  .main-slide {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   /* ════════════════════════════════
@@ -203,10 +226,9 @@
     background: #f0ece6;
   }
 
-  /* 콜라주 전체 */
   .collage-wrap {
     width: 100%;
-    padding: 12px 20px 0;
+    padding: 8px 16px 0;
     position: relative;
     flex-shrink: 0;
   }
@@ -357,8 +379,94 @@
   }
 
   /* ════════════════════════════════
-     Finder 사이드바 + 플로팅 버튼
+     섹션 2 - 신랑신부 소개
   ════════════════════════════════ */
+  .sec2 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #f0ece6;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .window-card {
+    width: 100%; max-width: 380px;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .window-titlebar {
+    height: 36px; padding: 0 14px;
+    background: rgba(255,255,255,0.3);
+    display: flex; align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  .window-dots { display: flex; gap: 7px; }
+  .window-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .window-dot.red { background: #ff5f56; }
+  .window-dot.yellow { background: #ffbd2e; }
+  .window-dot.green { background: #27c93f; }
+  .window-titlebar-text {
+    flex: 1; text-align: center; margin-right: 30px;
+    font-size: 11px; color: #aaa; font-weight: 600; letter-spacing: 0.3px;
+  }
+  .window-body {
+    padding: 36px 20px 32px;
+    text-align: center;
+  }
+  .sec2-title {
+    font-size: 16px; font-weight: 700;
+    color: #2a2a2a; margin-bottom: 32px;
+    letter-spacing: -0.3px;
+  }
+  .couple-row {
+    display: grid;
+    grid-template-columns: 1fr 36px 1fr;
+    align-items: start;
+    margin-bottom: 28px;
+  }
+  .profile { display: flex; flex-direction: column; align-items: center; }
+  .profile-photo {
+    width: 100px; height: 100px;
+    border-radius: 22px; overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 10px;
+    background: #e8e4de;
+  }
+  .profile-photo img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block; draggable: false;
+  }
+  .profile-role {
+    font-size: 9px; letter-spacing: 1.5px;
+    color: #bbb; font-weight: 600; margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+  .profile-name {
+    font-size: 17px; font-weight: 700;
+    color: #2a2a2a; margin-bottom: 5px;
+  }
+  .profile-family {
+    font-size: 11px; color: #999;
+    line-height: 1.5; word-break: keep-all;
+  }
+  .couple-and {
+    font-size: 13px; color: #ccc;
+    font-style: italic; font-weight: 500;
+    height: 100px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sec2-message {
+    background: rgba(255,255,255,0.45);
+    border-radius: 12px;
+    padding: 20px 16px;
+    font-size: 13px; line-height: 2;
+    color: #777; text-align: center;
+  }
   #finder-toggle { display: none; }
 
   .finder-dim {
@@ -543,6 +651,51 @@
         <div class="scroll-hint-dot"></div>
       </div>
 
+    </div>
+
+    <!-- ══ 섹션 2 - 신랑신부 소개 ══ -->
+    <div id="sec-couple" class="sec2">
+      <div class="window-card">
+        <div class="window-titlebar">
+          <div class="window-dots">
+            <div class="window-dot red"></div>
+            <div class="window-dot yellow"></div>
+            <div class="window-dot green"></div>
+          </div>
+          <div class="window-titlebar-text">wedding_invitation</div>
+        </div>
+        <div class="window-body">
+          <div class="sec2-title">우리 결혼합니다</div>
+          <div class="couple-row">
+            <!-- 신랑 -->
+            <div class="profile">
+              <div class="profile-photo">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="신랑" draggable="false" oncontextmenu="return false" />
+              </div>
+              <div class="profile-role">Groom</div>
+              <div class="profile-name">김정호</div>
+              <div class="profile-family">김○○ · 이○○의<br>장남</div>
+            </div>
+            <!-- and -->
+            <div class="couple-and">and</div>
+            <!-- 신부 -->
+            <div class="profile">
+              <div class="profile-photo">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80" alt="신부" draggable="false" oncontextmenu="return false" />
+              </div>
+              <div class="profile-role">Bride</div>
+              <div class="profile-name">이민지</div>
+              <div class="profile-family">이○○ · 박○○의<br>장녀</div>
+            </div>
+          </div>
+          <div class="sec2-message">
+            서로가 마주 보며 걸어온 시간이<br>
+            이제는 나란히 같은 곳을 바라보는<br>
+            소중한 약속의 시간이 되었습니다.<br>
+            저희의 시작을 축복해 주세요.
+          </div>
+        </div>
+      </div>
     </div>
 
   </div><!-- /main-section -->
