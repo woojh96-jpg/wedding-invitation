@@ -400,18 +400,111 @@
   .window-titlebar {
     height: 36px; padding: 0 14px;
     background: rgba(255,255,255,0.3);
-    display: flex; align-items: center;
+    display: flex; align-items: center; justify-content: space-between;
     border-bottom: 1px solid rgba(0,0,0,0.05);
   }
-  .window-dots { display: flex; gap: 7px; }
-  .window-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .window-dots { display: flex; gap: 7px; width: 46px; align-items: center; }
+  .window-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
   .window-dot.red { background: #ff5f56; }
   .window-dot.yellow { background: #ffbd2e; }
   .window-dot.green { background: #27c93f; }
   .window-titlebar-text {
-    flex: 1; text-align: center; margin-right: 30px;
+    flex: 1; text-align: center;
     font-size: 11px; color: #aaa; font-weight: 600; letter-spacing: 0.3px;
   }
+  .window-titlebar-spacer { width: 46px; }
+
+  /* ════════════════════════════════
+     섹션 3 - 갤러리
+  ════════════════════════════════ */
+  .sec3 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #f0ece6;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px; background: #fff;
+  }
+  .gallery-item {
+    position: relative; aspect-ratio: 1;
+    overflow: hidden; background: #e8e4de; cursor: pointer;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.2s ease;
+    -webkit-user-drag: none; pointer-events: none;
+  }
+  .gallery-item:active img { transform: scale(0.96); }
+  .heart-btn {
+    position: absolute; left: 0; bottom: 0;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5; cursor: pointer;
+  }
+  .heart-icon {
+    width: 14px; height: 14px; fill: white;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+    transition: fill 0.2s ease, transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  .heart-btn.active .heart-icon { fill: #ff3b30; transform: scale(1.2); }
+  .particle {
+    position: fixed; pointer-events: none; z-index: 2000;
+    font-size: 14px; user-select: none;
+    animation: flyUp 1s ease-out forwards;
+  }
+  @keyframes flyUp {
+    0% { transform: translate(-50%,-50%) scale(0.5) rotate(0deg); opacity: 1; }
+    100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.5) rotate(var(--tr)); opacity: 0; }
+  }
+  .gallery-footer {
+    padding: 16px 0;
+    font-size: 13px; font-weight: 600;
+    color: #555; background: #fff; text-align: center;
+  }
+  .img-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+    opacity: 0; pointer-events: none;
+    transition: background 0.3s ease, opacity 0.3s ease;
+  }
+  .img-overlay.show {
+    background: rgba(0,0,0,0.92);
+    opacity: 1; pointer-events: auto;
+  }
+  .img-overlay-inner {
+    position: relative;
+    transform: scale(0.88);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 95%; max-height: 85vh;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .img-overlay.show .img-overlay-inner { transform: scale(1); }
+  .img-overlay-inner img {
+    max-width: 100%; max-height: 78vh;
+    object-fit: contain; border-radius: 8px;
+    pointer-events: none; display: block;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .img-overlay-hint {
+    color: rgba(255,255,255,0.4); font-size: 11px;
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .img-overlay-close {
+    position: absolute; top: -16px; right: -16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: #fff;
+    transition: background 0.2s;
+  }
+  .img-overlay-close:hover { background: rgba(255,255,255,0.25); }
   .window-body {
     padding: 36px 20px 32px;
     text-align: center;
@@ -509,8 +602,8 @@
     opacity: 1; pointer-events: auto;
   }
 
-  .window-dots { display: flex; gap: 8px; padding: 2px 0 14px 8px; }
-  .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+  .finder-sidebar .window-dots { display: flex; gap: 8px; padding: 2px 0 14px 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); display: inline-block; flex-shrink: 0; }
   .dot.red { background: #ff5f57; }
   .dot.yellow { background: #ffbd2e; }
   .dot.green { background: #28c840; }
@@ -663,6 +756,7 @@
             <div class="window-dot green"></div>
           </div>
           <div class="window-titlebar-text">wedding_invitation</div>
+          <div class="window-titlebar-spacer"></div>
         </div>
         <div class="window-body">
           <div class="sec2-title">우리 결혼합니다</div>
@@ -698,7 +792,33 @@
       </div>
     </div>
 
+    <!-- ══ 섹션 3 - 갤러리 ══ -->
+    <div id="sec-gallery" class="sec3">
+      <div class="window-card">
+        <div class="window-titlebar">
+          <div class="window-dots">
+            <div class="window-dot red"></div>
+            <div class="window-dot yellow"></div>
+            <div class="window-dot green"></div>
+          </div>
+          <div class="window-titlebar-text">gallery</div>
+          <div class="window-titlebar-spacer"></div>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="gallery-footer" id="galleryCount">0장의 사진</div>
+      </div>
+    </div>
+
   </div><!-- /main-section -->
+
+  <!-- 풀스크린 오버레이 -->
+  <div class="img-overlay" id="imgOverlay">
+    <div class="img-overlay-inner">
+      <div class="img-overlay-close" onclick="closeOverlay()">×</div>
+      <img src="" id="overlayImg" />
+      <div class="img-overlay-hint">tap to close</div>
+    </div>
+  </div>
 
 </div><!-- /app -->
 
@@ -765,6 +885,74 @@
   }
   positionFinder();
   window.addEventListener('resize', positionFinder);
+
+  // ── 갤러리 ──
+  const galleryImages = [
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=600&q=80",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=80",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80",
+    "https://images.unsplash.com/photo-1465495910483-fb415507857c?w=600&q=80",
+    "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80",
+    "https://images.unsplash.com/photo-1522673607200-1648832cee98?w=600&q=80",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=600&q=80",
+    "https://images.unsplash.com/photo-1519225495810-7517c5c02378?w=600&q=80",
+    "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80",
+    "https://images.unsplash.com/photo-1544161515-4af6b1d462c2?w=600&q=80",
+    "https://images.unsplash.com/photo-1472653431158-6364773b2a56?w=600&q=80",
+    "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=600&q=80"
+  ];
+
+  const grid = document.getElementById('galleryGrid');
+  const overlay = document.getElementById('imgOverlay');
+  const overlayImg = document.getElementById('overlayImg');
+  document.getElementById('galleryCount').textContent = `${galleryImages.length}장의 사진`;
+
+  galleryImages.forEach(src => {
+    const item = document.createElement('div');
+    item.className = 'gallery-item';
+    item.innerHTML = `
+      <img src="${src}" onclick="openOverlay('${src}')" />
+      <div class="heart-btn" onclick="handleHeart(event, this)">
+        <svg class="heart-icon" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+      </div>
+    `;
+    grid.appendChild(item);
+  });
+
+  function openOverlay(src) {
+    overlayImg.src = src;
+    overlay.classList.add('show');
+  }
+  function closeOverlay() {
+    overlay.classList.remove('show');
+  }
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeOverlay();
+  });
+
+  function handleHeart(e, btn) {
+    e.stopPropagation();
+    const activating = !btn.classList.contains('active');
+    btn.classList.toggle('active');
+    if (activating) spawnParticles(e.clientX, e.clientY);
+  }
+
+  function spawnParticles(x, y) {
+    for (let i = 0; i < 6; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.innerHTML = '❤️';
+      p.style.setProperty('--tx', (Math.random() - 0.5) * 150 + 'px');
+      p.style.setProperty('--ty', -(Math.random() * 100 + 80) + 'px');
+      p.style.setProperty('--tr', (Math.random() - 0.5) * 90 + 'deg');
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 1000);
+    }
+  }
 
   // ── 이미지 보호 ──
   document.addEventListener('contextmenu', e => e.preventDefault());
