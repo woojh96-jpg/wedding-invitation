@@ -414,9 +414,14 @@
   }
   .window-titlebar-spacer { width: 46px; }
 
-  /* ════════════════════════════════
-     섹션 3 - 갤러리
-  ════════════════════════════════ */
+  /* ── 섹션 전환 페이드 ── */
+  .section-fade {
+    position: fixed; inset: 0; z-index: 5000;
+    background: #000;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .section-fade.active { opacity: 0.6; pointer-events: auto; }
   .sec3 {
     scroll-snap-align: start;
     min-height: 100vh;
@@ -473,6 +478,7 @@
     z-index: 9999;
     opacity: 0; pointer-events: none;
     transition: background 0.3s ease, opacity 0.3s ease;
+    touch-action: none;
   }
   .img-overlay.show {
     background: rgba(0,0,0,0.92);
@@ -813,10 +819,12 @@
 
 </div><!-- /app -->
 
+<!-- 섹션 전환 페이드 -->
+<div class="section-fade" id="sectionFade"></div>
+
 <!-- 풀스크린 오버레이 -->
 <div class="img-overlay" id="imgOverlay">
   <div class="img-overlay-inner">
-    <div class="img-overlay-close" onclick="closeOverlay()">×</div>
     <img src="" id="overlayImg" />
     <div class="img-overlay-hint">tap to close</div>
   </div>
@@ -871,6 +879,35 @@
 
   // 3.5초 후 자동 전환
   setTimeout(startInvitation, 3500);
+
+  // ── 메뉴 페이드 네비게이션 ──
+  const sectionFade = document.getElementById('sectionFade');
+
+  function navigateTo(targetId) {
+    document.getElementById('finder-toggle').checked = false;
+
+    sectionFade.classList.add('active');
+
+    setTimeout(() => {
+      const target = document.getElementById(targetId);
+      const mainSection = document.getElementById('main-section');
+      if (target && mainSection) {
+        mainSection.scrollTo({ top: target.offsetTop, behavior: 'instant' });
+      }
+      setTimeout(() => {
+        sectionFade.classList.remove('active');
+      }, 100);
+    }, 500);
+  }
+
+  // 메뉴 링크에 이벤트 연결
+  document.querySelectorAll('.finder-menu a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href').replace('#', '');
+      navigateTo(targetId);
+    });
+  });
 
   // ── 플로팅 버튼 위치 앱 기준으로 맞추기 ──
   function positionFinder() {
@@ -936,9 +973,17 @@
   function closeOverlay() {
     overlay.classList.remove('show');
   }
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeOverlay();
-  });
+  // 어디를 눌러도 닫기
+  overlay.addEventListener('click', closeOverlay);
+  overlay.addEventListener('touchend', e => {
+    e.preventDefault();
+    closeOverlay();
+  }, { passive: false });
+  // 핀치줌 방지
+  overlay.addEventListener('touchmove', e => {
+    if (e.touches.length > 1) e.preventDefault();
+  }, { passive: false });
+  overlay.addEventListener('gesturestart', e => e.preventDefault());
 
   function handleHeart(e, btn) {
     e.stopPropagation();
