@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>정호 ♥ 민지</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%; width: 100%;
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: #000; color: #fff;
+    overflow: hidden;
+  }
+
+  /* ── 전체 컨테이너 ── */
+  .app {
+    width: 100%; max-width: 430px;
+    height: 100vh; margin: 0 auto;
+    position: relative; overflow: hidden;
+    background: #0a0a0a;
+  }
+
+  /* ════════════════════════════════
+     로딩 화면
+  ════════════════════════════════ */
+  #loading {
+    position: absolute; inset: 0; z-index: 100;
+    background: #000;
+    display: flex; flex-direction: column;
+    opacity: 1; transition: opacity 0.8s ease;
+  }
+  #loading.fade-out { opacity: 0; pointer-events: none; }
+
+  /* 배경 사진 */
+  .loading-bg {
+    position: absolute; inset: 0;
+    background: url('https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80') center/cover no-repeat;
+    filter: brightness(0.45);
+  }
+  .loading-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.6) 100%);
+  }
+
+  /* 상단 상태바 느낌 */
+  .loading-statusbar {
+    position: relative; z-index: 1;
+    display: flex; justify-content: flex-end;
+    padding: 14px 20px 0;
+    font-size: 12px; color: rgba(255,255,255,0.8);
+    letter-spacing: 0.5px;
+  }
+
+  /* 잠금화면 시계 */
+  .loading-clock {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding-top: 48px;
+  }
+  .loading-clock-date {
+    font-size: 14px; font-weight: 300;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .loading-clock-time {
+    font-size: 76px; font-weight: 200;
+    letter-spacing: -2px; line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 알림 카드 */
+  .loading-notify-wrap {
+    position: relative; z-index: 1;
+    padding: 0 16px;
+    margin-top: 32px;
+    display: flex; flex-direction: column; gap: 10px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: notifyIn 0.6s ease 1.2s forwards;
+  }
+  @keyframes notifyIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .notify-card {
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .notify-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #ff6b9d, #c44dff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .notify-content { flex: 1; }
+  .notify-app {
+    font-size: 10px; color: rgba(255,255,255,0.6);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px;
+  }
+  .notify-title {
+    font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px;
+  }
+  .notify-msg {
+    font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.4;
+  }
+  .notify-time {
+    font-size: 10px; color: rgba(255,255,255,0.5); flex-shrink: 0; margin-top: 2px;
+  }
+
+  /* 하단 텍스트 */
+  .loading-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 1;
+    padding: 0 0 48px;
+    text-align: center;
+    opacity: 0;
+    animation: notifyIn 0.6s ease 1.8s forwards;
+  }
+  .loading-quote {
+    font-size: 14px; font-style: italic;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.5px; line-height: 1.7;
+    font-family: Georgia, serif;
+  }
+  .loading-quote em {
+    color: #ffb3c6; font-style: normal;
+  }
+  .loading-swipe {
+    margin-top: 24px;
+    font-size: 11px; color: rgba(255,255,255,0.4);
+    letter-spacing: 2px; text-transform: uppercase;
+    animation: swipePulse 2s ease 2.4s infinite;
+  }
+  .swipe-arrow {
+    display: block; font-size: 18px;
+    color: rgba(255,255,255,0.3); margin-top: 6px;
+    animation: swipePulse 2s ease 2.4s infinite;
+  }
+  @keyframes swipePulse {
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(4px); }
+  }
+
+
+  /* ════════════════════════════════
+     메인 (섹션 1)
+  ════════════════════════════════ */
+  #main-section {
+    position: absolute; inset: 0; z-index: 10;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1s ease 0.3s;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: #f0ece6;
+  }
+  #main-section.visible {
+    opacity: 1; pointer-events: auto;
+  }
+
+  /* ════════════════════════════════
+     메인 섹션
+  ════════════════════════════════ */
+  #main-section {
+    background: #f0ece6;
+  }
+
+  /* 상단 헤더 */
+  .main-header {
+    position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    padding: 14px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    z-index: 50; opacity: 0;
+    transition: opacity 0.5s ease 0.8s;
+    background: rgba(240,236,230,0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 0.5px solid rgba(0,0,0,0.08);
+  }
+  .main-header.visible { opacity: 1; }
+  .header-names {
+    font-size: 13px; letter-spacing: 3px; color: #333;
+    font-family: Georgia, serif;
+  }
+  .header-date {
+    font-size: 11px; color: #999; letter-spacing: 1px;
+  }
+
+  /* 메인 섹션 전체 */
+  .main-slide {
+    width: 100%; min-height: 100vh;
+    position: relative;
+    display: flex; flex-direction: column;
+    padding-top: 54px;
+    background: #f0ece6;
+  }
+
+  /* 콜라주 전체 */
+  .collage-wrap {
+    width: 100%;
+    padding: 12px 20px 0;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  /* 상단: 좌측 사진 + 우측 말풍선 */
+  .collage-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    align-items: start;
+  }
+  .collage-photo-main {
+    height: 230px;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .collage-photo-main img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block;
+  }
+
+  /* 말풍선 영역 */
+  .chat-bubbles {
+    padding-top: 36px;
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: textIn 0.7s ease 0.6s forwards;
+  }
+  @keyframes textIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 흰 말풍선 */
+  .bubble-white {
+    position: relative;
+    background: #fff; color: #7b7b7b;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: -0.4px; line-height: 1;
+    padding: 10px 13px 9px;
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    margin-bottom: 7px;
+    white-space: nowrap;
+  }
+  .bubble-white::after {
+    content: '';
+    position: absolute;
+    left: -5px; bottom: 1px;
+    width: 10px; height: 10px;
+    background: #fff;
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    transform: rotate(12deg);
+  }
+
+  /* 이모지 줄 */
+  .bubble-emoji {
+    font-size: 15px; letter-spacing: 5px;
+    margin: 14px 0 10px 4px;
+  }
+
+  /* 파란 말풍선 묶음 */
+  .blue-bubbles {
+    display: flex; flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+  }
+  .bubble-blue {
+    position: relative;
+    background: #1595ff; color: #fff;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: -0.4px; line-height: 1;
+    padding: 10px 13px 9px;
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 2px 4px rgba(21,149,255,0.18);
+    margin-bottom: 7px;
+    white-space: nowrap;
+  }
+  .bubble-blue::after {
+    content: '';
+    position: absolute;
+    right: -5px; bottom: 1px;
+    width: 10px; height: 10px;
+    background: #1595ff;
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+    transform: rotate(-12deg);
+  }
+
+  /* 하단: 사진 2장 나란히 */
+  .collage-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  .collage-photo-bottom {
+    height: 220px;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+  .collage-photo-bottom img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    display: block;
+  }
+
+  /* 하단 텍스트 */
+  .main-bottom-text {
+    padding: 22px 24px 36px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: textIn 0.7s ease 0.9s forwards;
+  }
+  .main-bottom-names {
+    font-size: 22px; font-weight: 300;
+    letter-spacing: 5px; color: #1a1a1a;
+    font-family: Georgia, serif;
+    margin-bottom: 8px;
+  }
+  .main-bottom-date {
+    font-size: 11px; letter-spacing: 2px;
+    color: #aaa; margin-bottom: 14px;
+  }
+  .main-bottom-quote {
+    font-size: 13px; color: #777;
+    line-height: 1.9; font-style: italic;
+    font-family: Georgia, serif;
+  }
+
+  /* 스크롤 힌트 */
+  .scroll-hint {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding-bottom: 28px;
+    opacity: 0;
+    animation: notifyIn 0.6s ease 1.4s forwards;
+  }
+  .scroll-hint-dot {
+    width: 4px; height: 4px; border-radius: 50%; background: #bbb;
+    animation: dotPulse 1.6s ease infinite;
+  }
+  .scroll-hint-dot:nth-child(2) { animation-delay: 0.2s; }
+  .scroll-hint-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.2; transform: translateY(0); }
+    50% { opacity: 0.8; transform: translateY(3px); }
+  }
+
+  /* ════════════════════════════════
+     Finder 사이드바 + 플로팅 버튼
+  ════════════════════════════════ */
+  #finder-toggle { display: none; }
+
+  .finder-dim {
+    position: absolute; inset: 0; z-index: 998;
+    background: rgba(0,0,0,0.18);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  #finder-toggle:checked ~ .finder-dim { opacity: 1; pointer-events: auto; }
+
+  .floating-menu-btn {
+    position: absolute;
+    left: 16px; bottom: 22px; z-index: 1001;
+    width: 50px; height: 50px; border-radius: 16px;
+    background: rgba(255,255,255,0.78);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.16), inset 0 0 0 1px rgba(255,255,255,0.65);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .floating-menu-btn span {
+    font-size: 20px; line-height: 1; color: #c0737a;
+    transition: transform 0.25s ease;
+  }
+  #finder-toggle:checked ~ .floating-menu-btn span { transform: scale(0.85); }
+
+  .finder-sidebar {
+    position: absolute;
+    left: 16px; bottom: 86px; z-index: 1000;
+    width: 220px; padding: 13px 11px 14px; border-radius: 23px;
+    background: rgba(239,236,227,0.92);
+    backdrop-filter: blur(28px) saturate(1.12); -webkit-backdrop-filter: blur(28px) saturate(1.12);
+    box-shadow: 0 20px 55px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.56);
+    transform: translateX(-110%) translateY(14px);
+    opacity: 0; pointer-events: none;
+    transition: transform 0.34s cubic-bezier(.2,.8,.2,1), opacity 0.24s ease;
+  }
+  #finder-toggle:checked ~ .finder-sidebar { transform: translateX(0) translateY(0); opacity: 1; pointer-events: auto; }
+
+  .window-dots { display: flex; gap: 8px; padding: 2px 0 14px 8px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); }
+  .dot.red { background: #ff5f57; }
+  .dot.yellow { background: #ffbd2e; }
+  .dot.green { background: #28c840; }
+
+  .sidebar-section-title {
+    padding: 4px 10px 8px; font-size: 11px; font-weight: 700;
+    color: rgba(80,76,72,0.55); letter-spacing: -0.2px;
+  }
+  .finder-menu { list-style: none; }
+  .finder-menu li { margin-bottom: 2px; }
+  .finder-menu a {
+    display: flex; align-items: center; gap: 10px;
+    height: 36px; padding: 0 10px; border-radius: 10px;
+    text-decoration: none; color: #3b3734;
+    font-size: 15px; font-weight: 600; letter-spacing: -0.3px;
+    transition: background 0.18s ease; -webkit-tap-highlight-color: transparent;
+  }
+  .finder-menu a:active, .finder-menu a:hover { background: rgba(255,255,255,0.48); }
+  .menu-icon { width: 21px; height: 21px; display: flex; align-items: center; justify-content: center; color: #4c4743; flex-shrink: 0; }
+  .menu-icon svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<input type="checkbox" id="finder-toggle" />
+<label for="finder-toggle" class="finder-dim"></label>
+
+<!-- Finder 사이드바 -->
+<aside class="finder-sidebar">
+  <div class="window-dots">
+    <span class="dot red"></span>
+    <span class="dot yellow"></span>
+    <span class="dot green"></span>
+  </div>
+  <div class="sidebar-section-title">Menu</div>
+  <ul class="finder-menu">
+    <li><a href="#sec-couple"><span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Couple</a></li>
+    <li><a href="#sec-gallery"><span class="menu-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="15" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-2-2-7 7"/></svg></span>Gallery</a></li>
+    <li><a href="#sec-calendar"><span class="menu-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></span>Calendar</a></li>
+    <li><a href="#sec-location"><span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M9 18l-6 3V6l6-3 6 3 6-3v15l-6 3z"/><path d="M9 3v15M15 6v15"/></svg></span>Location</a></li>
+    <li><a href="#sec-info"><span class="menu-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg></span>Information</a></li>
+    <li><a href="#sec-guestbook"><span class="menu-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-1.5z"/><path d="M8 7h6M8 11h7"/></svg></span>Guest Book</a></li>
+  </ul>
+</aside>
+
+<!-- 플로팅 버튼 -->
+<label for="finder-toggle" class="floating-menu-btn" aria-label="메뉴 열기">
+  <span style="font-size:20px;line-height:1;color:#c0737a">♥</span>
+</label>
+
+  <!-- ══ 로딩 화면 ══ -->
+  <div id="loading">
+    <div class="loading-bg"></div>
+
+    <div class="loading-statusbar">
+      <span id="statusTime"></span>
+    </div>
+
+    <div class="loading-clock">
+      <div class="loading-clock-date" id="clockDate"></div>
+      <div class="loading-clock-time" id="clockTime"></div>
+    </div>
+
+    <div class="loading-notify-wrap">
+      <div class="notify-card">
+        <div class="notify-icon">💌</div>
+        <div class="notify-content">
+          <div class="notify-app">청첩장</div>
+          <div class="notify-title">A new message has arrived 💌</div>
+        </div>
+        <div class="notify-time">지금</div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <!-- ══ 메인 섹션 ══ -->
+  <div id="main-section">
+
+
+
+    <div class="main-slide">
+
+      <!-- 콜라주 + 말풍선 -->
+      <div class="collage-wrap">
+
+        <!-- 상단: 좌측 사진 + 우측 말풍선 -->
+        <div class="collage-top">
+          <div class="collage-photo-main">
+            <img
+              src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=600&q=80"
+              alt="웨딩 사진 1"
+              draggable="false"
+              oncontextmenu="return false"
+            />
+          </div>
+          <div class="chat-bubbles">
+            <div class="bubble-emoji">🕯️ ❤️ 🎧</div>
+            <div class="bubble-white">Stay with me?</div>
+            <div class="blue-bubbles">
+              <div class="bubble-blue">Always.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 하단: 사진 2장 나란히 -->
+        <div class="collage-bottom">
+          <div class="collage-photo-bottom">
+            <img
+              src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80"
+              alt="웨딩 사진 2"
+              draggable="false"
+              oncontextmenu="return false"
+            />
+          </div>
+          <div class="collage-photo-bottom">
+            <img
+              src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80"
+              alt="웨딩 사진 3"
+              draggable="false"
+              oncontextmenu="return false"
+            />
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <!-- 스크롤 힌트 -->
+      <div class="scroll-hint">
+        <div class="scroll-hint-dot"></div>
+        <div class="scroll-hint-dot"></div>
+        <div class="scroll-hint-dot"></div>
+      </div>
+
+    </div>
+
+  </div><!-- /main-section -->
+
+</div><!-- /app -->
+
+<script>
+  // ── 시계 ──
+  function updateClock() {
+    const now = new Date();
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const dayEl = document.getElementById('clockDate');
+    const timeEl = document.getElementById('clockTime');
+    const statusEl = document.getElementById('statusTime');
+    if (dayEl) dayEl.textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+    let h = now.getHours(), m = now.getMinutes();
+    if (timeEl) timeEl.textContent = `${h}:${String(m).padStart(2,'0')}`;
+    if (statusEl) statusEl.textContent = `${h}:${String(m).padStart(2,'0')}`;
+  }
+  updateClock();
+  // 고정 날짜/시간으로 표시
+  document.getElementById('clockDate').textContent = 'Saturday, August 8';
+  document.getElementById('clockTime').textContent = '08:08';
+  document.getElementById('statusTime').textContent = '08:08';
+
+  // ── 로딩 → 메인 전환 ──
+  let started = false;
+  function startInvitation() {
+    if (started) return;
+    started = true;
+    const loading = document.getElementById('loading');
+    const main = document.getElementById('main-section');
+    loading.classList.add('fade-out');
+    setTimeout(() => {
+      loading.style.display = 'none';
+      main.classList.add('visible');
+    }, 800);
+  }
+
+  // 클릭 또는 스와이프로 전환
+  document.getElementById('loading').addEventListener('click', startInvitation);
+  document.getElementById('loading').addEventListener('touchstart', () => {}, {passive:true});
+
+  let touchStartY = 0;
+  document.getElementById('loading').addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+  }, {passive:true});
+  document.getElementById('loading').addEventListener('touchend', e => {
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (dy > 40) startInvitation();
+  }, {passive:true});
+
+  // 3.5초 후 자동 전환
+  setTimeout(startInvitation, 3500);
+
+  // ── 이미지 보호 ──
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('dragstart', e => e.preventDefault());
+  document.addEventListener('selectstart', e => e.preventDefault());
+</script>
+</body>
+</html>
