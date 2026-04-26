@@ -414,6 +414,87 @@
   }
   .window-titlebar-spacer { width: 46px; }
 
+  /* ════════════════════════════════
+     섹션 4 - 캘린더
+  ════════════════════════════════ */
+  .sec4 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #f0ece6;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .sec4-inner {
+    width: 100%; max-width: 360px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .cal-top-card {
+    background: #fff; border-radius: 22px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+  .cal-top-label { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; }
+  .cal-top-display {
+    background: #f8f8f8; border: 1px solid #eee;
+    border-radius: 10px; padding: 10px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px; font-weight: 500; color: #333;
+  }
+  .cal-card {
+    background: #fff; border-radius: 22px;
+    padding: 22px 20px 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+  .cal-header { text-align: center; margin-bottom: 20px; font-size: 17px; font-weight: 700; color: #333; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+  .cal-weekday { font-size: 11px; color: #ccc; font-weight: 500; margin-bottom: 10px; }
+  .cal-day {
+    height: 40px; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; color: #333;
+  }
+  .cal-day.empty { color: #ddd; }
+  .cal-day-heart {
+    position: relative; display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+  }
+  .cal-day-heart svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    fill: #ff6b9d;
+  }
+  .cal-day-heart span {
+    position: relative; z-index: 1;
+    font-size: 14px; font-weight: 700; color: #fff;
+    line-height: 1;
+  }
+  .cal-info {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #f0ede8;
+    margin-top: 16px;
+  }
+  .cal-info-date { font-size: 14px; font-weight: 500; color: #333; margin-bottom: 6px; }
+  .cal-info-venue { font-size: 13px; color: #999; margin-bottom: 20px; }
+  .cal-dday-title { font-size: 13px; color: #999; margin-bottom: 16px; }
+  .cal-dday-title b { color: #ff6b9d; font-weight: 700; }
+  .countdown-row { display: flex; justify-content: center; gap: 8px; }
+  .countdown-item {
+    background: #f8f7f5; border: 1px solid rgba(0,0,0,0.04);
+    border-radius: 14px; width: 62px; padding: 12px 0;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  .countdown-val {
+    font-size: 20px; font-weight: 700; color: #333;
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown-label { font-size: 9px; color: #bbb; text-transform: uppercase; letter-spacing: 0.5px; }
+  @keyframes tickPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  .tick-animate { animation: tickPulse 0.2s ease-out; }
+
   /* ── 섹션 전환 페이드 ── */
   .section-fade {
     position: fixed; inset: 0; z-index: 5000;
@@ -830,6 +911,69 @@
       </div>
     </div>
 
+    <!-- ══ 섹션 4 - 캘린더 ══ -->
+    <div id="sec-calendar" class="sec4">
+      <div class="sec4-inner">
+
+        <!-- Wedding Day 카드 -->
+        <div class="cal-top-card">
+          <div class="cal-top-label">Wedding Day</div>
+          <div class="cal-top-display">
+            <span>2026.08.08 &nbsp; PM 6:00</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 달력 카드 -->
+        <div class="cal-card">
+          <div class="cal-header">2026년 8월</div>
+          <div class="cal-grid">
+            <div class="cal-weekday">일</div><div class="cal-weekday">월</div><div class="cal-weekday">화</div>
+            <div class="cal-weekday">수</div><div class="cal-weekday">목</div><div class="cal-weekday">금</div><div class="cal-weekday">토</div>
+            <div class="cal-day empty">26</div><div class="cal-day empty">27</div><div class="cal-day empty">28</div>
+            <div class="cal-day empty">29</div><div class="cal-day empty">30</div><div class="cal-day empty">31</div>
+            <div class="cal-day">1</div>
+            <div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div>
+            <div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div>
+            <div class="cal-day">
+              <div class="cal-day-heart">
+                <svg viewBox="0 0 32 32"><path d="M16 28.5L14.1 26.75C7.2 20.45 2.75 16.35 2.75 11.35C2.75 7.25 5.95 4.05 10 4.05C12.3 4.05 14.5 5.1 16 6.75C17.5 5.1 19.7 4.05 22 4.05C26.05 4.05 29.25 7.25 29.25 11.35C29.25 16.35 24.8 20.45 17.9 26.75L16 28.5Z"/></svg>
+                <span>8</span>
+              </div>
+            </div>
+            <div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div>
+            <div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day">15</div>
+          </div>
+          <div class="cal-info">
+            <div class="cal-info-date">2026년 8월 8일 토요일 오후 6시 00분</div>
+            <div class="cal-info-venue">더케이호텔 서울 · 그랜드볼룸</div>
+            <div class="cal-dday-title">정호 ♥ 민지 결혼식이 <b id="ddayCount">-</b>일 남았습니다</div>
+            <div class="countdown-row">
+              <div class="countdown-item">
+                <span class="countdown-val" id="cdDays">00</span>
+                <span class="countdown-label">days</span>
+              </div>
+              <div class="countdown-item">
+                <span class="countdown-val" id="cdHours">00</span>
+                <span class="countdown-label">hours</span>
+              </div>
+              <div class="countdown-item">
+                <span class="countdown-val" id="cdMin">00</span>
+                <span class="countdown-label">min</span>
+              </div>
+              <div class="countdown-item" id="cdSecCard">
+                <span class="countdown-val" id="cdSec">00</span>
+                <span class="countdown-label">sec</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div><!-- /main-section -->
 
 </div><!-- /app -->
@@ -894,6 +1038,36 @@
 
   // 3.5초 후 자동 전환
   setTimeout(startInvitation, 3500);
+
+  // ── 카운트다운 ──
+  function updateCountdown() {
+    const target = new Date('2026-08-08T18:00:00').getTime();
+    const now = new Date().getTime();
+    const diff = target - now;
+    if (diff <= 0) {
+      document.querySelector('.cal-dday-title').innerHTML = '정호 ♥ 민지 결혼식을 축하합니다!';
+      return;
+    }
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+    document.getElementById('ddayCount').textContent = days;
+    document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+    document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cdMin').textContent = String(mins).padStart(2, '0');
+    const secEl = document.getElementById('cdSec');
+    const newSec = String(secs).padStart(2, '0');
+    if (secEl.textContent !== newSec) {
+      secEl.textContent = newSec;
+      const card = document.getElementById('cdSecCard');
+      card.classList.remove('tick-animate');
+      void card.offsetWidth;
+      card.classList.add('tick-animate');
+    }
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
 
   // ── 갤러리 스크롤 그라데이션 ──
   const galleryWrap = document.querySelector('.gallery-scroll-wrap');
