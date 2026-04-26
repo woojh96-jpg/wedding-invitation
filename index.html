@@ -895,6 +895,18 @@
   // 3.5초 후 자동 전환
   setTimeout(startInvitation, 3500);
 
+  // ── 갤러리 스크롤 그라데이션 ──
+  const galleryWrap = document.querySelector('.gallery-scroll-wrap');
+  galleryWrap.addEventListener('scroll', () => {
+    const atBottom = galleryWrap.scrollTop + galleryWrap.clientHeight >= galleryWrap.scrollHeight - 4;
+    galleryWrap.style.webkitMaskImage = atBottom
+      ? 'none'
+      : 'linear-gradient(to bottom, black 85%, transparent 100%)';
+    galleryWrap.style.maskImage = atBottom
+      ? 'none'
+      : 'linear-gradient(to bottom, black 85%, transparent 100%)';
+  }, { passive: true });
+
   // ── 메뉴 페이드 네비게이션 ──
   const sectionFade = document.getElementById('sectionFade');
 
