@@ -256,12 +256,6 @@
     padding-top: 36px;
     display: flex; flex-direction: column;
     align-items: flex-start;
-    opacity: 0;
-    transform: translateY(8px);
-    animation: textIn 0.7s ease 0.6s forwards;
-  }
-  @keyframes textIn {
-    to { opacity: 1; transform: translateY(0); }
   }
 
   /* 흰 말풍선 */
@@ -340,9 +334,6 @@
   /* 하단 텍스트 */
   .main-bottom-text {
     padding: 22px 24px 36px;
-    opacity: 0;
-    transform: translateY(10px);
-    animation: textIn 0.7s ease 0.9s forwards;
   }
   .main-bottom-names {
     font-size: 22px; font-weight: 300;
@@ -724,6 +715,53 @@
   .finder-menu a:active, .finder-menu a:hover { background: rgba(255,255,255,0.48); }
   .menu-icon { width: 21px; height: 21px; display: flex; align-items: center; justify-content: center; color: #4c4743; flex-shrink: 0; }
   .menu-icon svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ════════════════════════════════
+     고급 애니메이션 - 최소 움직임
+  ════════════════════════════════ */
+  @keyframes luxFade {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes luxFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .anim-fade-up,
+  .anim-fade-left,
+  .anim-fade-right,
+  .anim-scale-pop,
+  .anim-fade-in,
+  .anim-bubble { opacity: 0; }
+
+  .anim-fade-up.run,
+  .anim-fade-left.run,
+  .anim-fade-right.run,
+  .anim-scale-pop.run,
+  .anim-bubble.run {
+    animation: luxFade 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .anim-fade-in.run {
+    animation: luxFadeIn 1.2s ease forwards;
+  }
+
+  /* 딜레이 */
+  .d1  { animation-delay: 0.1s  !important; }
+  .d2  { animation-delay: 0.2s  !important; }
+  .d3  { animation-delay: 0.35s !important; }
+  .d4  { animation-delay: 0.5s  !important; }
+  .d5  { animation-delay: 0.65s !important; }
+  .d6  { animation-delay: 0.8s  !important; }
+  .d7  { animation-delay: 0.95s !important; }
+  .d8  { animation-delay: 1.1s  !important; }
+  .d9  { animation-delay: 1.25s !important; }
+  .d10 { animation-delay: 1.4s  !important; }
+  .d11 { animation-delay: 1.55s !important; }
+  .d12 { animation-delay: 1.7s  !important; }
+  .d13 { animation-delay: 1.85s !important; }
+  .d14 { animation-delay: 2.0s  !important; }
+  .d15 { animation-delay: 2.15s !important; }
 </style>
 </head>
 <body>
@@ -796,7 +834,7 @@
 
         <!-- 상단: 좌측 사진 + 우측 말풍선 -->
         <div class="collage-top">
-          <div class="collage-photo-main">
+          <div class="collage-photo-main anim-fade-left">
             <img
               src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=600&q=80"
               alt="웨딩 사진 1"
@@ -805,17 +843,17 @@
             />
           </div>
           <div class="chat-bubbles">
-            <div class="bubble-emoji">🕯️ ❤️ 🎧</div>
-            <div class="bubble-white">Stay with me?</div>
+            <div class="bubble-emoji anim-fade-in">🕯️ ❤️ 🎧</div>
+            <div class="bubble-white anim-fade-up d3">Stay with me?</div>
             <div class="blue-bubbles">
-              <div class="bubble-blue">Always.</div>
+              <div class="bubble-blue anim-fade-up d6">Always.</div>
             </div>
           </div>
         </div>
 
         <!-- 하단: 사진 2장 나란히 -->
         <div class="collage-bottom">
-          <div class="collage-photo-bottom">
+          <div class="collage-photo-bottom anim-fade-up d3">
             <img
               src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80"
               alt="웨딩 사진 2"
@@ -823,7 +861,7 @@
               oncontextmenu="return false"
             />
           </div>
-          <div class="collage-photo-bottom">
+          <div class="collage-photo-bottom anim-fade-up d5">
             <img
               src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400&q=80"
               alt="웨딩 사진 3"
@@ -848,7 +886,7 @@
 
     <!-- ══ 섹션 2 - 신랑신부 소개 ══ -->
     <div id="sec-couple" class="sec2">
-      <div class="window-card">
+      <div class="window-card anim-scale-pop">
         <div class="window-titlebar">
           <div class="window-dots">
             <div class="window-dot red"></div>
@@ -859,10 +897,10 @@
           <div class="window-titlebar-spacer"></div>
         </div>
         <div class="window-body">
-          <div class="sec2-title">우리 결혼합니다</div>
+          <div class="sec2-title anim-fade-up d1">우리 결혼합니다</div>
           <div class="couple-row">
             <!-- 신랑 -->
-            <div class="profile">
+            <div class="profile anim-fade-left d2">
               <div class="profile-photo">
                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="신랑" draggable="false" oncontextmenu="return false" />
               </div>
@@ -871,9 +909,9 @@
               <div class="profile-family">김○○ · 이○○의<br>장남</div>
             </div>
             <!-- and -->
-            <div class="couple-and">and</div>
+            <div class="couple-and anim-fade-in d4">and</div>
             <!-- 신부 -->
-            <div class="profile">
+            <div class="profile anim-fade-right d2">
               <div class="profile-photo">
                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80" alt="신부" draggable="false" oncontextmenu="return false" />
               </div>
@@ -882,7 +920,7 @@
               <div class="profile-family">이○○ · 박○○의<br>장녀</div>
             </div>
           </div>
-          <div class="sec2-message">
+          <div class="sec2-message anim-fade-up d5">
             서로가 마주 보며 걸어온 시간이<br>
             이제는 나란히 같은 곳을 바라보는<br>
             소중한 약속의 시간이 되었습니다.<br>
@@ -916,10 +954,10 @@
       <div class="sec4-inner">
 
         <!-- Wedding Day 카드 -->
-        <div class="cal-top-card">
-          <div class="cal-top-label">Wedding Day</div>
+        <div class="cal-top-card anim-fade-up">
+          <div class="cal-top-label">Wedding Day 💍</div>
           <div class="cal-top-display">
-            <span>2026.08.08 &nbsp; PM 6:00</span>
+            <span>2026.08.08 &nbsp; 18:00</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
@@ -927,7 +965,7 @@
         </div>
 
         <!-- 달력 카드 -->
-        <div class="cal-card">
+        <div class="cal-card anim-fade-up d2">
           <div class="cal-header">2026년 8월</div>
           <div class="cal-grid">
             <div class="cal-weekday">일</div><div class="cal-weekday">월</div><div class="cal-weekday">화</div>
@@ -1020,6 +1058,7 @@
     setTimeout(() => {
       loading.style.display = 'none';
       main.classList.add('visible');
+      setTimeout(triggerSec1Anims, 300);
     }, 800);
   }
 
@@ -1068,6 +1107,36 @@
   }
   updateCountdown();
   setInterval(updateCountdown, 1000);
+
+  // ── 섹션 진입 애니메이션 (Intersection Observer) ──
+  const animClasses = [
+    '.anim-fade-up', '.anim-fade-left', '.anim-fade-right',
+    '.anim-scale-pop', '.anim-fade-in', '.anim-bubble'
+  ];
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('run');
+        observer.unobserve(entry.target); // 한 번만 실행
+      }
+    });
+  }, {
+    root: document.getElementById('main-section'),
+    threshold: 0.15
+  });
+
+  // 모든 애니메이션 요소 관찰
+  animClasses.forEach(cls => {
+    document.querySelectorAll(cls).forEach(el => observer.observe(el));
+  });
+
+  // 섹션 1은 로딩 후 바로 실행
+  function triggerSec1Anims() {
+    document.querySelectorAll('.main-slide .anim-fade-up, .main-slide .anim-fade-left, .main-slide .anim-fade-right, .main-slide .anim-bubble, .main-slide .anim-fade-in').forEach(el => {
+      el.classList.add('run');
+    });
+  }
 
   // ── 갤러리 스크롤 그라데이션 ──
   const galleryWrap = document.querySelector('.gallery-scroll-wrap');
