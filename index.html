@@ -437,7 +437,7 @@
     width: 100%; height: 100%;
     object-fit: cover; display: block;
     transition: transform 0.2s ease;
-    -webkit-user-drag: none; pointer-events: none;
+    -webkit-user-drag: none;
   }
   .gallery-item:active img { transform: scale(0.96); }
   .heart-btn {
@@ -811,16 +811,16 @@
 
   </div><!-- /main-section -->
 
-  <!-- 풀스크린 오버레이 -->
-  <div class="img-overlay" id="imgOverlay">
-    <div class="img-overlay-inner">
-      <div class="img-overlay-close" onclick="closeOverlay()">×</div>
-      <img src="" id="overlayImg" />
-      <div class="img-overlay-hint">tap to close</div>
-    </div>
-  </div>
-
 </div><!-- /app -->
+
+<!-- 풀스크린 오버레이 -->
+<div class="img-overlay" id="imgOverlay">
+  <div class="img-overlay-inner">
+    <div class="img-overlay-close" onclick="closeOverlay()">×</div>
+    <img src="" id="overlayImg" />
+    <div class="img-overlay-hint">tap to close</div>
+  </div>
+</div>
 
 <script>
   // ── 시계 ──
@@ -911,13 +911,21 @@
     const item = document.createElement('div');
     item.className = 'gallery-item';
     item.innerHTML = `
-      <img src="${src}" onclick="openOverlay('${src}')" />
-      <div class="heart-btn" onclick="handleHeart(event, this)">
+      <img src="${src}" />
+      <div class="heart-btn">
         <svg class="heart-icon" viewBox="0 0 24 24">
           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
         </svg>
       </div>
     `;
+    item.addEventListener('click', e => {
+      if (e.target.closest('.heart-btn')) return;
+      openOverlay(src);
+    });
+    item.querySelector('.heart-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      handleHeart(e, e.currentTarget);
+    });
     grid.appendChild(item);
   });
 
