@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800&display=swap" rel="stylesheet">
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2153426b42ea3427ff95cb90898419ec&autoload=false"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=2153426b42ea3427ff95cb90898419ec&autoload=false"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -536,11 +536,18 @@
     width: 100%; max-width: 360px;
     display: flex; flex-direction: column; gap: 12px;
   }
+  .location-section-title {
+    font-size: 11px; font-weight: 700; color: #bbb;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-align: center; margin-bottom: 2px;
+  }
   .location-map-card {
     border-radius: 22px; overflow: hidden;
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   }
-  #kakaoMap { width: 100%; height: 200px; display: block; }
+  #kakaoMap { width: 100%; height: 220px; display: block; }
+  #kakaoMap input,
+  #kakaoMap .map_border { display: none !important; }
   .location-info-card {
     background: #fff; border-radius: 22px;
     padding: 20px;
@@ -550,37 +557,66 @@
     font-size: 17px; font-weight: 700;
     color: #1a1a1a; margin-bottom: 3px;
   }
-  .location-hall {
-    font-size: 13px; color: #999; margin-bottom: 12px;
-  }
+  .location-hall { font-size: 13px; color: #999; margin-bottom: 12px; }
   .location-address {
     font-size: 13px; color: #555; line-height: 1.7;
     padding-bottom: 14px; margin-bottom: 14px;
     border-bottom: 1px solid #f0ede8;
   }
-  .location-btns {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
-  }
-  .location-btn {
-    padding: 10px 0; border-radius: 10px;
-    font-size: 12px; font-weight: 600;
-    text-align: center; cursor: pointer;
-    text-decoration: none; display: block;
+  .location-guide-btn {
+    width: 100%; padding: 13px;
+    background: #1a1a1a; color: #fff;
+    border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.3px;
     transition: opacity 0.15s;
   }
-  .location-btn:active { opacity: 0.7; }
-  .location-btn-kakao { background: #FEE500; color: #1a1a1a; }
-  .location-btn-naver { background: #03C75A; color: #fff; }
-  .location-btn-tmap  { background: #FF6B35; color: #fff; }
-  .location-transport-card {
-    background: #fff; border-radius: 22px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  .location-guide-btn:active { opacity: 0.8; }
+
+  /* 길찾기 모달 */
+  .location-modal-overlay {
+    position: fixed; inset: 0; z-index: 6000;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
   }
-  .transport-title {
-    font-size: 11px; font-weight: 700; color: #bbb;
+  .location-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .location-modal {
+    width: 100%; max-width: 430px;
+    background: #fff; border-radius: 24px 24px 0 0;
+    padding: 12px 20px 40px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .location-modal-overlay.open .location-modal { transform: translateY(0); }
+  .modal-handle {
+    width: 36px; height: 4px; background: #e0ddd8;
+    border-radius: 99px; margin: 0 auto 20px;
+  }
+  .modal-section-title {
+    font-size: 13px; font-weight: 700; color: #999;
     letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
+  }
+  .modal-map-btns {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-bottom: 20px;
+  }
+  .modal-map-btn {
+    padding: 11px 0; border-radius: 10px;
+    font-size: 12px; font-weight: 600;
+    text-align: center; cursor: pointer;
+    border: none; transition: opacity 0.15s;
+  }
+  .modal-map-btn:active { opacity: 0.8; }
+  .modal-btn-kakao { background: #FEE500; color: #1a1a1a; }
+  .modal-btn-naver { background: #03C75A; color: #fff; }
+  .modal-btn-tmap  { background: #FF6B35; color: #fff; }
+  .modal-transport { background: #f8f7f5; border-radius: 14px; padding: 16px; }
+  .modal-transport-title {
+    font-size: 11px; font-weight: 700; color: #bbb;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
   }
   .transport-item {
     display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start;
@@ -588,18 +624,191 @@
   .transport-item:last-child { margin-bottom: 0; }
   .transport-icon {
     width: 30px; height: 30px; border-radius: 8px;
-    background: #f5f4f0;
+    background: #fff;
     display: flex; align-items: center; justify-content: center;
     font-size: 14px; flex-shrink: 0;
   }
-  .transport-label {
-    font-size: 12px; font-weight: 600; color: #333; margin-bottom: 3px;
+  .transport-label { font-size: 12px; font-weight: 600; color: #333; margin-bottom: 3px; }
+  .transport-desc { font-size: 12px; color: #888; line-height: 1.6; }
+
+  /* ════════════════════════════════
+     RSVP 팝업 + 폼 모달
+  ════════════════════════════════ */
+
+  /* iOS 알림 팝업 */
+  .rsvp-alert-overlay {
+    position: fixed; inset: 0; z-index: 7000;
+    background: rgba(0,0,0,0.45);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
   }
-  .transport-desc {
-    font-size: 12px; color: #888; line-height: 1.6;
+  .rsvp-alert-overlay.open { opacity: 1; pointer-events: auto; }
+  .rsvp-alert {
+    width: 270px;
+    background: rgba(242,242,247,0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 14px;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .rsvp-alert-overlay.open .rsvp-alert { transform: scale(1); }
+  .rsvp-alert-body {
+    padding: 20px 16px 16px;
+    text-align: center;
+  }
+  .rsvp-alert-title {
+    font-size: 17px; font-weight: 700;
+    color: #000; margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .rsvp-alert-msg {
+    font-size: 13px; color: #555;
+    line-height: 1.5; letter-spacing: -0.1px;
+  }
+  .rsvp-alert-btns {
+    display: flex; border-top: 0.5px solid rgba(0,0,0,0.15);
+  }
+  .rsvp-alert-btn {
+    flex: 1; padding: 13px 0;
+    font-size: 17px; font-weight: 400;
+    color: #007AFF; background: none; border: none;
+    cursor: pointer; letter-spacing: -0.2px;
+    transition: background 0.15s;
+  }
+  .rsvp-alert-btn:active { background: rgba(0,0,0,0.06); }
+  .rsvp-alert-btn.bold { font-weight: 600; }
+  .rsvp-alert-btn + .rsvp-alert-btn {
+    border-left: 0.5px solid rgba(0,0,0,0.15);
   }
 
-  /* ── 섹션 전환 페이드 ── */
+  /* RSVP 폼 모달 */
+  .rsvp-modal-overlay {
+    position: fixed; inset: 0; z-index: 7000;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .rsvp-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .rsvp-modal {
+    width: 100%; max-width: 430px;
+    background: #fff; border-radius: 24px 24px 0 0;
+    padding: 12px 20px 40px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    max-height: 90vh; overflow-y: auto;
+  }
+  .rsvp-modal-overlay.open .rsvp-modal { transform: translateY(0); }
+  .rsvp-modal-handle {
+    width: 36px; height: 4px; background: #e0ddd8;
+    border-radius: 99px; margin: 0 auto 20px;
+  }
+  .rsvp-modal-title {
+    font-size: 18px; font-weight: 700; color: #1a1a1a;
+    margin-bottom: 20px; letter-spacing: -0.3px;
+  }
+
+  /* RSVP 폼 요소 */
+  .rsvp-field { margin-bottom: 16px; }
+  .rsvp-label {
+    font-size: 12px; font-weight: 600; color: #999;
+    letter-spacing: 0.3px; margin-bottom: 8px; display: block;
+  }
+
+  /* 신랑/신부 선택 */
+  .rsvp-side-btns {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .rsvp-side-btn {
+    padding: 11px; border-radius: 10px;
+    border: 1.5px solid #e8e5e0;
+    background: #fff; font-size: 14px; font-weight: 500;
+    color: #999; cursor: pointer; text-align: center;
+    transition: all 0.15s;
+  }
+  .rsvp-side-btn.selected {
+    border-color: #1a1a1a; color: #1a1a1a;
+    background: #f5f4f0; font-weight: 600;
+  }
+
+  /* 입력 필드 */
+  .rsvp-input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid #e8e5e0; border-radius: 10px;
+    font-size: 15px; color: #1a1a1a; background: #fff;
+    outline: none; transition: border-color 0.15s;
+    font-family: inherit;
+  }
+  .rsvp-input:focus { border-color: #1a1a1a; }
+
+  /* 인원 선택 */
+  .rsvp-count-btns {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .rsvp-count-btn {
+    width: 44px; height: 44px; border-radius: 10px;
+    border: 1.5px solid #e8e5e0;
+    background: #fff; font-size: 15px; font-weight: 500;
+    color: #999; cursor: pointer; text-align: center;
+    transition: all 0.15s;
+  }
+  .rsvp-count-btn.selected {
+    border-color: #1a1a1a; color: #1a1a1a;
+    background: #f5f4f0; font-weight: 600;
+  }
+
+  /* 식사 여부 */
+  .rsvp-meal-btns {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .rsvp-meal-btn {
+    padding: 11px; border-radius: 10px;
+    border: 1.5px solid #e8e5e0;
+    background: #fff; font-size: 14px; font-weight: 500;
+    color: #999; cursor: pointer; text-align: center;
+    transition: all 0.15s;
+  }
+  .rsvp-meal-btn.selected {
+    border-color: #1a1a1a; color: #1a1a1a;
+    background: #f5f4f0; font-weight: 600;
+  }
+
+  /* 개인정보 동의 */
+  .rsvp-agree {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 14px; background: #f8f7f5; border-radius: 10px;
+    cursor: pointer; margin-bottom: 20px;
+  }
+  .rsvp-agree-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 1.5px solid #ddd; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+  }
+  .rsvp-agree-check.checked { background: #1a1a1a; border-color: #1a1a1a; }
+  .rsvp-agree-check.checked::after {
+    content: '✓'; color: #fff; font-size: 11px; font-weight: 700;
+  }
+  .rsvp-agree-text {
+    font-size: 12px; color: #888; line-height: 1.5;
+  }
+  .rsvp-agree-text b { color: #555; font-weight: 600; }
+
+  /* 제출 버튼 */
+  .rsvp-submit-btn {
+    width: 100%; padding: 15px;
+    background: #1a1a1a; color: #fff;
+    border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 600;
+    cursor: pointer; letter-spacing: -0.2px;
+    transition: opacity 0.15s;
+  }
+  .rsvp-submit-btn:active { opacity: 0.8; }
+  .rsvp-submit-btn:disabled { background: #ccc; cursor: default; }
   .section-fade {
     position: fixed; inset: 0; z-index: 5000;
     background: #000;
@@ -1133,8 +1342,10 @@
     <div id="sec-location" class="sec5">
       <div class="sec5-inner">
 
+        <div class="location-section-title anim-fade-up">Location</div>
+
         <!-- 지도 -->
-        <div class="location-map-card anim-fade-up">
+        <div class="location-map-card anim-fade-up d1">
           <div id="kakaoMap"></div>
         </div>
 
@@ -1146,43 +1357,8 @@
             서울특별시 서초구 헌릉로 177<br>
             📞 02-1234-5678
           </div>
-          <div class="location-btns">
-            <a class="location-btn location-btn-kakao"
-               href="kakaomap://look?p=37.4479,127.0573" 
-               onclick="openMap('kakao')">카카오맵</a>
-            <a class="location-btn location-btn-naver"
-               href="nmap://place?lat=37.4479&lng=127.0573&name=더케이호텔서울"
-               onclick="openMap('naver')">네이버</a>
-            <a class="location-btn location-btn-tmap"
-               href="tmap://route?goalx=127.0573&goaly=37.4479&goalname=더케이호텔서울"
-               onclick="openMap('tmap')">T맵</a>
-          </div>
-        </div>
-
-        <!-- 교통 안내 -->
-        <div class="location-transport-card anim-fade-up d3">
-          <div class="transport-title">오시는 길</div>
-          <div class="transport-item">
-            <div class="transport-icon">🚇</div>
-            <div>
-              <div class="transport-label">지하철</div>
-              <div class="transport-desc">3호선 양재역 5번 출구에서 도보 5분</div>
-            </div>
-          </div>
-          <div class="transport-item">
-            <div class="transport-icon">🚌</div>
-            <div>
-              <div class="transport-label">버스</div>
-              <div class="transport-desc">양재역 정류장 하차 후 도보 5분</div>
-            </div>
-          </div>
-          <div class="transport-item">
-            <div class="transport-icon">🚗</div>
-            <div>
-              <div class="transport-label">자가용</div>
-              <div class="transport-desc">네비게이션 '더케이호텔 서울' 검색<br>지하 주차장 3시간 무료</div>
-            </div>
-          </div>
+          <button class="location-guide-btn" onclick="openLocationModal()" style="margin-bottom:8px">오시는 길 안내</button>
+          <button class="location-guide-btn" style="background:#fff;color:#1a1a1a;border:1.5px solid #e8e5e0;" onclick="openRsvpForm()">참석 의사 전달</button>
         </div>
 
       </div>
@@ -1191,6 +1367,104 @@
   </div><!-- /main-section -->
 
 </div><!-- /app -->
+
+<!-- 길찾기 모달 -->
+<div class="location-modal-overlay" id="locationModalOverlay" onclick="closeLocationModal(event)">
+  <div class="location-modal" id="location-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-section-title">길찾기</div>
+    <div class="modal-map-btns">
+      <button class="modal-map-btn modal-btn-kakao" onclick="openMap('kakao')">카카오맵</button>
+      <button class="modal-map-btn modal-btn-naver" onclick="openMap('naver')">네이버 지도</button>
+      <button class="modal-map-btn modal-btn-tmap" onclick="openMap('tmap')">T맵</button>
+    </div>
+    <div class="modal-transport">
+      <div class="modal-transport-title">오시는 길</div>
+      <div class="transport-item">
+        <div class="transport-icon">🚇</div>
+        <div>
+          <div class="transport-label">지하철</div>
+          <div class="transport-desc">3호선 양재역 5번 출구에서 도보 5분</div>
+        </div>
+      </div>
+      <div class="transport-item">
+        <div class="transport-icon">🚌</div>
+        <div>
+          <div class="transport-label">버스</div>
+          <div class="transport-desc">양재역 정류장 하차 후 도보 5분</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- iOS 참석의사 알림 팝업 -->
+<div class="rsvp-alert-overlay" id="rsvpAlertOverlay">
+  <div class="rsvp-alert">
+    <div class="rsvp-alert-body">
+      <div class="rsvp-alert-title">참석 의사 💌</div>
+      <div class="rsvp-alert-msg">소중한 자리에 함께하실 건가요?<br>참석 여부를 남겨주세요.</div>
+    </div>
+    <div class="rsvp-alert-btns">
+      <button class="rsvp-alert-btn" onclick="closeRsvpAlert()">나중에</button>
+      <button class="rsvp-alert-btn bold" onclick="openRsvpForm()">참석 확인</button>
+    </div>
+  </div>
+</div>
+
+<!-- RSVP 폼 모달 -->
+<div class="rsvp-modal-overlay" id="rsvpModalOverlay" onclick="closeRsvpModal(event)">
+  <div class="rsvp-modal" id="rsvp-modal">
+    <div class="rsvp-modal-handle"></div>
+    <div class="rsvp-modal-title">참석 의사 전달</div>
+
+    <!-- 신랑/신부측 -->
+    <div class="rsvp-field">
+      <div class="rsvp-side-btns">
+        <button class="rsvp-side-btn" onclick="selectSide(this, 'groom')">🤵🏻 신랑측</button>
+        <button class="rsvp-side-btn" onclick="selectSide(this, 'bride')">👰🏻‍♀️ 신부측</button>
+      </div>
+    </div>
+
+    <!-- 이름 -->
+    <div class="rsvp-field">
+      <label class="rsvp-label">성함</label>
+      <input class="rsvp-input" type="text" placeholder="이름을 입력해주세요" id="rsvpName" />
+    </div>
+
+    <!-- 동반 인원 -->
+    <div class="rsvp-field">
+      <label class="rsvp-label">동반 인원 (본인 포함)</label>
+      <div class="rsvp-count-btns">
+        <button class="rsvp-count-btn" onclick="selectCount(this, 1)">1</button>
+        <button class="rsvp-count-btn" onclick="selectCount(this, 2)">2</button>
+        <button class="rsvp-count-btn" onclick="selectCount(this, 3)">3</button>
+        <button class="rsvp-count-btn" onclick="selectCount(this, 4)">4</button>
+        <button class="rsvp-count-btn" onclick="selectCount(this, 5)">5+</button>
+      </div>
+    </div>
+
+    <!-- 식사 여부 -->
+    <div class="rsvp-field">
+      <label class="rsvp-label">식사 여부</label>
+      <div class="rsvp-meal-btns">
+        <button class="rsvp-meal-btn" onclick="selectMeal(this, 'yes')">🍽 식사할게요</button>
+        <button class="rsvp-meal-btn" onclick="selectMeal(this, 'no')">🙏 괜찮아요</button>
+      </div>
+    </div>
+
+    <!-- 개인정보 동의 -->
+    <div class="rsvp-agree" onclick="toggleAgree()">
+      <div class="rsvp-agree-check" id="agreeCheck"></div>
+      <div class="rsvp-agree-text">
+        <b>[필수] 개인정보 수집 및 이용 동의</b><br>
+        수집 항목: 성명, 참석 정보 · 목적: 예식 참석 인원 파악 · 보유기간: 예식 종료 후 즉시 삭제
+      </div>
+    </div>
+
+    <button class="rsvp-submit-btn" id="rsvpSubmitBtn" onclick="submitRsvp()">확인</button>
+  </div>
+</div>
 
 <!-- 섹션 전환 페이드 -->
 <div class="section-fade" id="sectionFade"></div>
@@ -1254,38 +1528,85 @@
   setTimeout(startInvitation, 4000);
 
   // ── 카카오맵 ──
+  let kakaoMapInstance = null;
+
   function initKakaoMap() {
     if (!window.kakao || !window.kakao.maps) return;
     const container = document.getElementById('kakaoMap');
-    const lat = 37.4479, lng = 127.0573;
+    const lat = 37.4752, lng = 127.0438;
     const options = {
       center: new kakao.maps.LatLng(lat, lng),
       level: 3
     };
-    const map = new kakao.maps.Map(container, options);
+    kakaoMapInstance = new kakao.maps.Map(container, options);
+    kakaoMapInstance.setZoomable(false);
+    kakaoMapInstance.setDraggable(false);
 
-    // 마커
-    const marker = new kakao.maps.Marker({
-      position: new kakao.maps.LatLng(lat, lng)
-    });
-    marker.setMap(map);
+    // Here ♥ 커스텀 마커
+    const content = `
+      <div style="
+        position:relative;
+        background:#1a1a1a;color:#fff;
+        padding:7px 13px;border-radius:20px;
+        font-size:13px;font-weight:600;
+        display:flex;align-items:center;gap:5px;
+        white-space:nowrap;
+        box-shadow:0 2px 10px rgba(0,0,0,0.3);
+      ">
+        Here <span style="color:#ff6b9d">♥</span>
+        <div style="
+          position:absolute;bottom:-7px;left:50%;
+          transform:translateX(-50%);
+          border:7px solid transparent;
+          border-top-color:#1a1a1a;
+          border-bottom:none;
+        "></div>
+      </div>`;
 
-    // 인포윈도우
-    const infowindow = new kakao.maps.InfoWindow({
-      content: '<div style="padding:6px 10px;font-size:12px;font-weight:600;white-space:nowrap">더케이호텔 서울</div>'
+    const customOverlay = new kakao.maps.CustomOverlay({
+      position: new kakao.maps.LatLng(lat, lng),
+      content: content,
+      yAnchor: 1.35
     });
-    infowindow.open(map, marker);
+    customOverlay.setMap(kakaoMapInstance);
+  }
+
+  function relayoutKakaoMap() {
+    if (!kakaoMapInstance || !window.kakao || !kakao.maps) return;
+    const center = new kakao.maps.LatLng(37.4752, 127.0438);
+    kakaoMapInstance.relayout();
+    kakaoMapInstance.setCenter(center);
+  }
+
+  // ── 길찾기 모달 ──
+  function openLocationModal() {
+    document.getElementById('locationModalOverlay').classList.add('open');
+  }
+  function closeLocationModal(e) {
+    if (e.target === document.getElementById('locationModalOverlay')) {
+      document.getElementById('locationModalOverlay').classList.remove('open');
+    }
   }
 
   // 길찾기 앱 연결
   function openMap(type) {
-    const lat = 37.4479, lng = 127.0573, name = '더케이호텔서울';
-    const urls = {
-      kakao: `https://map.kakao.com/link/to/${name},${lat},${lng}`,
-      naver: `https://map.naver.com/index.nhn?elng=${lng}&elat=${lat}&etext=${name}&menu=route`,
-      tmap:  `https://apis.openapi.sk.com/tmap/app/routes?goalx=${lng}&goaly=${lat}&goalname=${name}`
-    };
-    window.open(urls[type]);
+    const lat = 37.4752, lng = 127.0438, name = '더케이호텔서울';
+    if (type === 'kakao') {
+      window.location.href = `kakaomap://look?p=${lat},${lng}`;
+      setTimeout(() => {
+        window.location.href = `https://map.kakao.com/link/to/${name},${lat},${lng}`;
+      }, 1000);
+    } else if (type === 'naver') {
+      window.location.href = `nmap://route/car?dlat=${lat}&dlng=${lng}&dname=${encodeURIComponent(name)}&appname=com.wedding`;
+      setTimeout(() => {
+        window.location.href = `https://map.naver.com/index.nhn?elng=${lng}&elat=${lat}&etext=${encodeURIComponent(name)}&menu=route`;
+      }, 1000);
+    } else if (type === 'tmap') {
+      window.location.href = `tmap://route?goalx=${lng}&goaly=${lat}&goalname=${encodeURIComponent(name)}`;
+      setTimeout(() => {
+        window.location.href = `https://tmap.life/nYvV3`;
+      }, 1000);
+    }
   }
 
   // ── 카운트다운 ──
@@ -1349,7 +1670,131 @@
   }
 
   // ── 카카오맵 로드 ──
-  kakao.maps.load(initKakaoMap);
+  window.addEventListener('load', function() {
+    if (window.kakao && kakao.maps) {
+      kakao.maps.load(function() {
+        initKakaoMap();
+        setTimeout(relayoutKakaoMap, 500);
+      });
+    } else {
+      console.error('카카오맵 SDK가 로드되지 않았습니다.');
+    }
+  });
+
+  // ── RSVP ──
+  let rsvpShown = false;
+  let rsvpData = { side: null, count: null, meal: null, agree: false };
+
+  // 로케이션 섹션 진입 시 팝업
+  document.getElementById('main-section').addEventListener('scroll', function() {
+    if (rsvpShown) return;
+    const loc = document.getElementById('sec-location');
+    const mainSection = document.getElementById('main-section');
+    if (!loc) return;
+    const scrollTop = mainSection.scrollTop;
+    const locTop = loc.offsetTop;
+    if (scrollTop >= locTop - 100) {
+      rsvpShown = true;
+      setTimeout(() => {
+        document.getElementById('rsvpAlertOverlay').classList.add('open');
+      }, 600);
+    }
+  }, { passive: true });
+
+  function closeRsvpAlert() {
+    document.getElementById('rsvpAlertOverlay').classList.remove('open');
+  }
+  function openRsvpForm() {
+    document.getElementById('rsvpAlertOverlay').classList.remove('open');
+    setTimeout(() => {
+      document.getElementById('rsvpModalOverlay').classList.add('open');
+    }, 200);
+  }
+  function closeRsvpModal(e) {
+    if (e.target === document.getElementById('rsvpModalOverlay')) {
+      document.getElementById('rsvpModalOverlay').classList.remove('open');
+    }
+  }
+
+  function selectSide(el, val) {
+    document.querySelectorAll('.rsvp-side-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    rsvpData.side = val;
+  }
+  function selectCount(el, val) {
+    document.querySelectorAll('.rsvp-count-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    rsvpData.count = val;
+  }
+  function selectMeal(el, val) {
+    document.querySelectorAll('.rsvp-meal-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    rsvpData.meal = val;
+  }
+  function toggleAgree() {
+    rsvpData.agree = !rsvpData.agree;
+    const check = document.getElementById('agreeCheck');
+    check.classList.toggle('checked', rsvpData.agree);
+  }
+  function submitRsvp() {
+    const name = document.getElementById('rsvpName').value.trim();
+    if (!rsvpData.side) { alert('신랑측/신부측을 선택해주세요.'); return; }
+    if (!name) { alert('성함을 입력해주세요.'); return; }
+    if (!rsvpData.count) { alert('동반 인원을 선택해주세요.'); return; }
+    if (!rsvpData.meal) { alert('식사 여부를 선택해주세요.'); return; }
+    if (!rsvpData.agree) { alert('개인정보 수집 및 이용에 동의해주세요.'); return; }
+    document.getElementById('rsvpModalOverlay').classList.remove('open');
+    setTimeout(() => {
+      document.getElementById('rsvpAlertOverlay').classList.add('open');
+      document.querySelector('.rsvp-alert-body').innerHTML = `
+        <div class="rsvp-alert-title">감사합니다 💌</div>
+        <div class="rsvp-alert-msg">${name}님의 참석 의사가<br>전달되었습니다.</div>
+      `;
+      document.querySelector('.rsvp-alert-btns').innerHTML = `
+        <button class="rsvp-alert-btn bold" onclick="closeRsvpAlert()">확인</button>
+      `;
+    }, 300);
+  }
+
+  // ── 모달 스와이프 다운 닫기 ──
+  function addSwipeClose(modalId, overlayId, closeFn) {
+    const modal = document.getElementById(modalId);
+    let startY = 0, currentY = 0, isDragging = false;
+
+    modal.addEventListener('touchstart', e => {
+      startY = e.touches[0].clientY;
+      isDragging = true;
+      modal.style.transition = 'none';
+    }, { passive: true });
+
+    modal.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      currentY = e.touches[0].clientY;
+      const diff = currentY - startY;
+      if (diff > 0) modal.style.transform = `translateY(${diff}px)`;
+    }, { passive: true });
+
+    modal.addEventListener('touchend', () => {
+      isDragging = false;
+      modal.style.transition = '';
+      const diff = currentY - startY;
+      if (diff > 80) {
+        closeFn();
+      } else {
+        modal.style.transform = '';
+      }
+      startY = 0; currentY = 0;
+    });
+  }
+
+  addSwipeClose('location-modal', 'locationModalOverlay', () => {
+    document.getElementById('locationModalOverlay').classList.remove('open');
+    document.getElementById('location-modal').style.transform = '';
+  });
+  addSwipeClose('rsvp-modal', 'rsvpModalOverlay', () => {
+    document.getElementById('rsvpModalOverlay').classList.remove('open');
+    document.getElementById('rsvp-modal').style.transform = '';
+  });
 
   // ── 갤러리 스크롤 그라데이션 ──
   const galleryWrap = document.querySelector('.gallery-scroll-wrap');
@@ -1376,6 +1821,9 @@
       const mainSection = document.getElementById('main-section');
       if (target && mainSection) {
         mainSection.scrollTo({ top: target.offsetTop, behavior: 'instant' });
+      }
+      if (targetId === 'sec-location') {
+        setTimeout(relayoutKakaoMap, 300);
       }
       setTimeout(() => {
         sectionFade.classList.remove('active');
