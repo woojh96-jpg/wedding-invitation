@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>정호 ♥ 민지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800&display=swap" rel="stylesheet">
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=2153426b42ea3427ff95cb90898419ec&autoload=false"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
@@ -65,66 +69,80 @@
     letter-spacing: 0.5px;
   }
 
-  /* 잠금화면 시계 */
   .loading-clock {
-    position: relative; z-index: 1;
+    position: absolute;
+    top: 96px;
+    left: 0;
+    width: 100%;
     text-align: center;
-    padding-top: 48px;
+    z-index: 5;
   }
   .loading-clock-date {
-    font-size: 14px; font-weight: 300;
-    color: rgba(255,255,255,0.75);
-    letter-spacing: 1px; margin-bottom: 6px;
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: -0.7px;
+    margin-bottom: 22px;
+    color: rgba(255,255,255,0.9);
+    font-family: "Nunito Sans", "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   }
   .loading-clock-time {
-    font-size: 76px; font-weight: 200;
-    letter-spacing: -2px; line-height: 1;
-    color: #fff;
+    font-size: clamp(82px, 23vw, 96px);
+    font-weight: 550;
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+    color: #fff9ea;
+    text-align: center;
     font-variant-numeric: tabular-nums;
+    font-family: "Nunito Sans", "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   }
 
   /* 알림 카드 */
   .loading-notify-wrap {
-    position: relative; z-index: 1;
-    padding: 0 16px;
-    margin-top: 32px;
-    display: flex; flex-direction: column; gap: 10px;
+    position: absolute; z-index: 1;
+    left: 16px; right: 16px;
+    top: 50%; transform: translateY(-50%);
     opacity: 0;
-    transform: translateY(12px);
     animation: notifyIn 0.6s ease 1.2s forwards;
   }
   @keyframes notifyIn {
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; }
   }
 
   .notify-card {
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(30,30,30,0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border-radius: 16px;
     padding: 12px 14px;
     display: flex; align-items: flex-start; gap: 10px;
   }
-  .notify-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: linear-gradient(135deg, #ff6b9d, #c44dff);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
+  .notify-profile.flower-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    font-size: 18px;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12), inset 0 0 0 0.5px rgba(0, 0, 0, 0.05);
   }
   .notify-content { flex: 1; }
   .notify-app {
-    font-size: 10px; color: rgba(255,255,255,0.6);
-    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px;
+    font-size: 14px;
+    margin-bottom: 2px;
+    line-height: 1;
   }
   .notify-title {
-    font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px;
-  }
-  .notify-msg {
-    font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.4;
+    font-size: 13px; font-weight: 300;
+    color: #fff; margin-bottom: 2px;
+    letter-spacing: 0.2px;
   }
   .notify-time {
-    font-size: 10px; color: rgba(255,255,255,0.5); flex-shrink: 0; margin-top: 2px;
+    font-size: 10px; color: rgba(255,255,255,0.4); flex-shrink: 0; margin-top: 2px;
   }
 
   /* 하단 텍스트 */
@@ -171,7 +189,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    background: #f0ece6;
+    background: #ffffff;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
   }
@@ -192,7 +210,7 @@
      메인 섹션
   ════════════════════════════════ */
   #main-section {
-    background: #f0ece6;
+    background: #ffffff;
   }
 
   /* 상단 헤더 */
@@ -223,7 +241,7 @@
     position: relative;
     display: flex; flex-direction: column;
     padding-top: 54px;
-    background: #f0ece6;
+    background: #ffffff;
   }
 
   .collage-wrap {
@@ -281,9 +299,27 @@
   }
 
   /* 이모지 줄 */
-  .bubble-emoji {
-    font-size: 15px; letter-spacing: 5px;
-    margin: 14px 0 10px 4px;
+  .white-chat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .emoji-line {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 3px;
+    margin: 0 0 6px 4px;
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    font-size: 15px;
+    line-height: 1;
+    letter-spacing: 0;
+    transform: none;
+  }
+  .emoji-line span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* 파란 말풍선 묶음 */
@@ -336,7 +372,7 @@
     padding: 22px 24px 36px;
   }
   .main-bottom-names {
-    font-size: 22px; font-weight: 300;
+    font-size: 16px; font-weight: 300;
     letter-spacing: 5px; color: #1a1a1a;
     font-family: Georgia, serif;
     margin-bottom: 8px;
@@ -375,7 +411,7 @@
   .sec2 {
     scroll-snap-align: start;
     min-height: 100vh;
-    background: #f0ece6;
+    background: #ffffff;
     display: flex; align-items: center; justify-content: center;
     padding: 20px;
   }
@@ -411,7 +447,7 @@
   .sec4 {
     scroll-snap-align: start;
     min-height: 100vh;
-    background: #f0ece6;
+    background: #ffffff;
     display: flex; align-items: center; justify-content: center;
     padding: 20px;
   }
@@ -486,6 +522,83 @@
   }
   .tick-animate { animation: tickPulse 0.2s ease-out; }
 
+  /* ════════════════════════════════
+     섹션 5 - 로케이션
+  ════════════════════════════════ */
+  .sec5 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .sec5-inner {
+    width: 100%; max-width: 360px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .location-map-card {
+    border-radius: 22px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  #kakaoMap { width: 100%; height: 200px; display: block; }
+  .location-info-card {
+    background: #fff; border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+  .location-venue-name {
+    font-size: 17px; font-weight: 700;
+    color: #1a1a1a; margin-bottom: 3px;
+  }
+  .location-hall {
+    font-size: 13px; color: #999; margin-bottom: 12px;
+  }
+  .location-address {
+    font-size: 13px; color: #555; line-height: 1.7;
+    padding-bottom: 14px; margin-bottom: 14px;
+    border-bottom: 1px solid #f0ede8;
+  }
+  .location-btns {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+  }
+  .location-btn {
+    padding: 10px 0; border-radius: 10px;
+    font-size: 12px; font-weight: 600;
+    text-align: center; cursor: pointer;
+    text-decoration: none; display: block;
+    transition: opacity 0.15s;
+  }
+  .location-btn:active { opacity: 0.7; }
+  .location-btn-kakao { background: #FEE500; color: #1a1a1a; }
+  .location-btn-naver { background: #03C75A; color: #fff; }
+  .location-btn-tmap  { background: #FF6B35; color: #fff; }
+  .location-transport-card {
+    background: #fff; border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+  .transport-title {
+    font-size: 11px; font-weight: 700; color: #bbb;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .transport-item {
+    display: flex; gap: 10px; margin-bottom: 12px; align-items: flex-start;
+  }
+  .transport-item:last-child { margin-bottom: 0; }
+  .transport-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: #f5f4f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .transport-label {
+    font-size: 12px; font-weight: 600; color: #333; margin-bottom: 3px;
+  }
+  .transport-desc {
+    font-size: 12px; color: #888; line-height: 1.6;
+  }
+
   /* ── 섹션 전환 페이드 ── */
   .section-fade {
     position: fixed; inset: 0; z-index: 5000;
@@ -497,7 +610,7 @@
   .sec3 {
     scroll-snap-align: start;
     min-height: 100vh;
-    background: #f0ece6;
+    background: #ffffff;
     display: flex; align-items: center; justify-content: center;
     padding: 20px;
   }
@@ -798,9 +911,7 @@
   <div id="loading">
     <div class="loading-bg"></div>
 
-    <div class="loading-statusbar">
-      <span id="statusTime"></span>
-    </div>
+    <div class="loading-statusbar"></div>
 
     <div class="loading-clock">
       <div class="loading-clock-date" id="clockDate"></div>
@@ -809,10 +920,10 @@
 
     <div class="loading-notify-wrap">
       <div class="notify-card">
-        <div class="notify-icon">💌</div>
+        <div class="notify-profile flower-avatar">💐</div>
         <div class="notify-content">
-          <div class="notify-app">청첩장</div>
-          <div class="notify-title">A new message has arrived 💌</div>
+          <div class="notify-app">❤️</div>
+          <div class="notify-title">I Love you</div>
         </div>
         <div class="notify-time">지금</div>
       </div>
@@ -843,8 +954,14 @@
             />
           </div>
           <div class="chat-bubbles">
-            <div class="bubble-emoji anim-fade-in">🕯️ ❤️ 🎧</div>
-            <div class="bubble-white anim-fade-up d3">Stay with me?</div>
+            <div class="white-chat anim-fade-up d3">
+              <div class="emoji-line">
+                <span>🤵🏻</span>
+                <span>💍</span>
+                <span>👰🏻‍♀️</span>
+              </div>
+              <div class="bubble-white">Stay with me?</div>
+            </div>
             <div class="blue-bubbles">
               <div class="bubble-blue anim-fade-up d6">Always.</div>
             </div>
@@ -1012,6 +1129,65 @@
       </div>
     </div>
 
+    <!-- ══ 섹션 5 - 로케이션 ══ -->
+    <div id="sec-location" class="sec5">
+      <div class="sec5-inner">
+
+        <!-- 지도 -->
+        <div class="location-map-card anim-fade-up">
+          <div id="kakaoMap"></div>
+        </div>
+
+        <!-- 장소 정보 -->
+        <div class="location-info-card anim-fade-up d2">
+          <div class="location-venue-name">더케이호텔 서울</div>
+          <div class="location-hall">3F 그랜드볼룸</div>
+          <div class="location-address">
+            서울특별시 서초구 헌릉로 177<br>
+            📞 02-1234-5678
+          </div>
+          <div class="location-btns">
+            <a class="location-btn location-btn-kakao"
+               href="kakaomap://look?p=37.4479,127.0573" 
+               onclick="openMap('kakao')">카카오맵</a>
+            <a class="location-btn location-btn-naver"
+               href="nmap://place?lat=37.4479&lng=127.0573&name=더케이호텔서울"
+               onclick="openMap('naver')">네이버</a>
+            <a class="location-btn location-btn-tmap"
+               href="tmap://route?goalx=127.0573&goaly=37.4479&goalname=더케이호텔서울"
+               onclick="openMap('tmap')">T맵</a>
+          </div>
+        </div>
+
+        <!-- 교통 안내 -->
+        <div class="location-transport-card anim-fade-up d3">
+          <div class="transport-title">오시는 길</div>
+          <div class="transport-item">
+            <div class="transport-icon">🚇</div>
+            <div>
+              <div class="transport-label">지하철</div>
+              <div class="transport-desc">3호선 양재역 5번 출구에서 도보 5분</div>
+            </div>
+          </div>
+          <div class="transport-item">
+            <div class="transport-icon">🚌</div>
+            <div>
+              <div class="transport-label">버스</div>
+              <div class="transport-desc">양재역 정류장 하차 후 도보 5분</div>
+            </div>
+          </div>
+          <div class="transport-item">
+            <div class="transport-icon">🚗</div>
+            <div>
+              <div class="transport-label">자가용</div>
+              <div class="transport-desc">네비게이션 '더케이호텔 서울' 검색<br>지하 주차장 3시간 무료</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div><!-- /main-section -->
 
 </div><!-- /app -->
@@ -1045,7 +1221,6 @@
   // 고정 날짜/시간으로 표시
   document.getElementById('clockDate').textContent = 'Saturday, August 8';
   document.getElementById('clockTime').textContent = '08:08';
-  document.getElementById('statusTime').textContent = '08:08';
 
   // ── 로딩 → 메인 전환 ──
   let started = false;
@@ -1076,7 +1251,42 @@
   }, {passive:true});
 
   // 3.5초 후 자동 전환
-  setTimeout(startInvitation, 3500);
+  setTimeout(startInvitation, 4000);
+
+  // ── 카카오맵 ──
+  function initKakaoMap() {
+    if (!window.kakao || !window.kakao.maps) return;
+    const container = document.getElementById('kakaoMap');
+    const lat = 37.4479, lng = 127.0573;
+    const options = {
+      center: new kakao.maps.LatLng(lat, lng),
+      level: 3
+    };
+    const map = new kakao.maps.Map(container, options);
+
+    // 마커
+    const marker = new kakao.maps.Marker({
+      position: new kakao.maps.LatLng(lat, lng)
+    });
+    marker.setMap(map);
+
+    // 인포윈도우
+    const infowindow = new kakao.maps.InfoWindow({
+      content: '<div style="padding:6px 10px;font-size:12px;font-weight:600;white-space:nowrap">더케이호텔 서울</div>'
+    });
+    infowindow.open(map, marker);
+  }
+
+  // 길찾기 앱 연결
+  function openMap(type) {
+    const lat = 37.4479, lng = 127.0573, name = '더케이호텔서울';
+    const urls = {
+      kakao: `https://map.kakao.com/link/to/${name},${lat},${lng}`,
+      naver: `https://map.naver.com/index.nhn?elng=${lng}&elat=${lat}&etext=${name}&menu=route`,
+      tmap:  `https://apis.openapi.sk.com/tmap/app/routes?goalx=${lng}&goaly=${lat}&goalname=${name}`
+    };
+    window.open(urls[type]);
+  }
 
   // ── 카운트다운 ──
   function updateCountdown() {
@@ -1137,6 +1347,9 @@
       el.classList.add('run');
     });
   }
+
+  // ── 카카오맵 로드 ──
+  kakao.maps.load(initKakaoMap);
 
   // ── 갤러리 스크롤 그라데이션 ──
   const galleryWrap = document.querySelector('.gallery-scroll-wrap');
