@@ -449,15 +449,15 @@
     min-height: 100vh;
     background: #ffffff;
     display: flex; align-items: center; justify-content: center;
-    padding: 20px;
+    padding: 16px 20px;
   }
   .sec4-inner {
     width: 100%; max-width: 360px;
-    display: flex; flex-direction: column; gap: 14px;
+    display: flex; flex-direction: column; gap: 10px;
   }
   .cal-top-card {
     background: #fff; border-radius: 22px;
-    padding: 18px 20px;
+    padding: 14px 18px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.04);
   }
   .cal-top-label { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; }
@@ -469,10 +469,10 @@
   }
   .cal-card {
     background: #fff; border-radius: 22px;
-    padding: 22px 20px 24px;
+    padding: 16px 18px 18px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.04);
   }
-  .cal-header { text-align: center; margin-bottom: 20px; font-size: 17px; font-weight: 700; color: #333; }
+  .cal-header { text-align: center; margin-bottom: 14px; font-size: 17px; font-weight: 700; color: #333; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
   .cal-weekday { font-size: 11px; color: #ccc; font-weight: 500; margin-bottom: 10px; }
   .cal-day {
@@ -697,19 +697,39 @@
   .rsvp-modal {
     width: 100%; max-width: 430px;
     background: #fff; border-radius: 24px 24px 0 0;
-    padding: 12px 20px 40px;
+    padding: 12px 20px calc(18px + env(safe-area-inset-bottom));
     transform: translateY(100%);
     transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
-    max-height: 90vh; overflow-y: auto;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .rsvp-modal-overlay.open .rsvp-modal { transform: translateY(0); }
   .rsvp-modal-handle {
     width: 36px; height: 4px; background: #e0ddd8;
-    border-radius: 99px; margin: 0 auto 20px;
+    border-radius: 99px; margin: 0 auto 16px;
+  }
+  .rsvp-modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
   }
   .rsvp-modal-title {
     font-size: 18px; font-weight: 700; color: #1a1a1a;
-    margin-bottom: 20px; letter-spacing: -0.3px;
+    margin: 0; letter-spacing: -0.3px;
+  }
+  .rsvp-close-btn {
+    width: 32px; height: 32px;
+    border: none; border-radius: 50%;
+    background: #f5f4f0; color: #777;
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rsvp-form-body {
+    overflow: visible;
+    padding: 0;
+  }
+  .rsvp-submit-wrap {
+    padding: 12px 0 0;
   }
 
   /* RSVP 폼 요소 */
@@ -809,6 +829,394 @@
   }
   .rsvp-submit-btn:active { opacity: 0.8; }
   .rsvp-submit-btn:disabled { background: #ccc; cursor: default; }
+
+  /* ════════════════════════════════
+     섹션 6 - 인포메이션
+  ════════════════════════════════ */
+  .sec6 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .sec6-inner {
+    width: 100%; max-width: 360px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .info-section-title {
+    font-size: 11px; font-weight: 700; color: #bbb;
+    letter-spacing: 2px; text-transform: uppercase;
+    text-align: center;
+  }
+  .info-tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: #f5f4f0; border-radius: 12px; padding: 3px;
+  }
+  .info-tab {
+    padding: 9px; border-radius: 9px;
+    font-size: 13px; font-weight: 500; color: #999;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s ease; border: none; background: none;
+  }
+  .info-tab.active {
+    background: #fff; color: #1a1a1a; font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .info-content { display: none; }
+  .info-content.active { display: block; }
+  .info-card {
+    background: #fff; border-radius: 22px;
+    padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  }
+  .info-card-title {
+    font-size: 16px; font-weight: 700; color: #1a1a1a;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .info-item {
+    display: flex; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid #f5f4f0; align-items: flex-start;
+  }
+  .info-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .info-item-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: #f5f4f0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .info-item-content { flex: 1; }
+  .info-item-label {
+    font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 3px;
+  }
+  .info-item-desc { font-size: 12px; color: #888; line-height: 1.6; }
+  .info-badge {
+    display: inline-block; padding: 3px 8px;
+    background: #f0ece6; border-radius: 99px;
+    font-size: 11px; font-weight: 600; color: #888; margin-top: 4px;
+  }
+  .info-badge.green { background: #e6f4ea; color: #1a6e3c; }
+  .info-badge.blue  { background: #e8f0fd; color: #1a56a0; }
+
+  /* ════════════════════════════════
+     섹션 7 - 마음 전하실 곳
+  ════════════════════════════════ */
+  .sec7 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .sec7-inner {
+    width: 100%; max-width: 360px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .account-section-title {
+    font-size: 22px; font-weight: 700; color: #1a1a1a;
+    letter-spacing: -0.5px;
+    text-align: center;
+  }
+  .account-section-subtitle {
+    font-size: 13px; color: #aaa; text-align: center;
+    line-height: 1.9; padding: 0 4px;
+  }
+  .account-tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: #f5f4f0; border-radius: 12px; padding: 3px;
+  }
+  .account-tab {
+    padding: 9px; border-radius: 9px;
+    font-size: 13px; font-weight: 500; color: #999;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s ease; border: none; background: none;
+  }
+  .account-tab.active {
+    background: #fff; color: #1a1a1a; font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .account-content { display: none; flex-direction: column; gap: 10px; }
+  .account-content.active { display: flex; }
+  .account-card {
+    background: #fff; border-radius: 18px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .account-name {
+    font-size: 15px; font-weight: 600; color: #1a1a1a;
+  }
+  .account-copy-btn {
+    padding: 8px 16px; border-radius: 8px;
+    background: #f5f4f0; border: none;
+    font-size: 12px; font-weight: 600; color: #555;
+    cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .account-copy-btn.copied { background: #1a1a1a; color: #fff; }
+
+  /* ════════════════════════════════
+     섹션 8 - 방명록
+  ════════════════════════════════ */
+  .sec8 {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .sec8-inner {
+    width: 100%; max-width: 360px;
+  }
+  .gb-window-card {
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    height: 78vh;
+  }
+
+  .gb-header {
+    background: #f5f5f5;
+    padding: 20px 16px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 0.5px solid #d0d0d0;
+    position: relative;
+  }
+  .gb-header-title {
+    font-size: 17px; font-weight: 600; color: #000;
+    position: absolute; left: 50%; transform: translateX(-50%);
+  }
+  .gb-header-title {
+    font-size: 17px; font-weight: 600; color: #000;
+    position: absolute; left: 50%; transform: translateX(-50%);
+  }
+  .gb-header-edit {
+    font-size: 17px; color: #007AFF; cursor: pointer;
+    background: none; border: none; padding: 0;
+  }
+  .gb-header-compose {
+    font-size: 22px; color: #007AFF; cursor: pointer;
+    background: none; border: none; padding: 0; line-height: 1;
+  }
+
+  /* 메시지 리스트 */
+  .gb-list {
+    flex: 1; overflow-y: auto;
+    background: #fff;
+  }
+  .gb-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 0.5px solid #e0e0e0;
+    position: relative; overflow: hidden;
+    cursor: pointer; background: #fff;
+    transition: background 0.15s;
+    -webkit-user-select: none; user-select: none;
+  }
+  .gb-item:active { background: #d0d0d0; }
+  .gb-item.private { opacity: 0.6; }
+
+  /* 파란 점 */
+  .gb-unread-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #007AFF; flex-shrink: 0;
+  }
+
+  /* 프로필 아이콘 */
+  .gb-avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: #c7c7cc;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .gb-avatar svg { width: 28px; height: 28px; fill: #fff; }
+
+  /* 메시지 내용 */
+  .gb-item-content { flex: 1; min-width: 0; }
+  .gb-item-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 3px;
+  }
+  .gb-item-name {
+    font-size: 15px; font-weight: 600; color: #000;
+  }
+  .gb-item-date {
+    font-size: 13px; color: #8e8e93; white-space: nowrap; margin-left: 8px;
+  }
+  .gb-item-preview {
+    font-size: 14px; color: #8e8e93;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .gb-item-preview.private-msg { color: #c7c7cc; font-style: italic; }
+  .gb-chevron { color: #c7c7cc; font-size: 14px; flex-shrink: 0; }
+
+  /* 스와이프 삭제 버튼 */
+  .gb-delete-btn {
+    position: absolute; right: -80px; top: 0; bottom: 0;
+    width: 80px; background: #ff3b30;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: right 0.25s ease;
+  }
+  .gb-item.swiped .gb-delete-btn { right: 0; }
+
+  .gb-compose-btn {
+    position: absolute; bottom: -24px; right: 0;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #007AFF;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: #fff; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0,122,255,0.4);
+    border: none;
+  }
+  .sec8-inner { position: relative; }
+
+  /* 방명록 작성 모달 */
+  .gb-modal-overlay {
+    position: fixed; inset: 0; z-index: 7500;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .gb-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .gb-modal {
+    width: 100%; max-width: 430px;
+    background: #fff; border-radius: 24px 24px 0 0;
+    padding: 12px 20px calc(40px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  .gb-modal-overlay.open .gb-modal { transform: translateY(0); }
+  .gb-modal-handle {
+    width: 36px; height: 4px; background: #e0ddd8;
+    border-radius: 99px; margin: 0 auto 16px;
+  }
+  .gb-modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .gb-modal-title { font-size: 17px; font-weight: 700; color: #000; }
+  .gb-modal-cancel {
+    font-size: 17px; color: #007AFF;
+    background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .gb-modal-send {
+    font-size: 17px; font-weight: 600; color: #007AFF;
+    background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .gb-modal-send:disabled { color: #c7c7cc; }
+
+  .gb-field { margin-bottom: 14px; }
+  .gb-label {
+    font-size: 12px; font-weight: 600; color: #999;
+    letter-spacing: 0.3px; margin-bottom: 6px; display: block;
+  }
+  .gb-input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid #e8e5e0; border-radius: 10px;
+    font-size: 15px; color: #1a1a1a; background: #fff;
+    outline: none; font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .gb-input:focus { border-color: #007AFF; }
+  .gb-textarea {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid #e8e5e0; border-radius: 10px;
+    font-size: 15px; color: #1a1a1a; background: #fff;
+    outline: none; font-family: inherit; resize: none; height: 100px;
+    transition: border-color 0.15s;
+  }
+  .gb-textarea:focus { border-color: #007AFF; }
+  .gb-char-count {
+    text-align: right; font-size: 11px; color: #c7c7cc; margin-top: 4px;
+  }
+  .gb-char-count.warn { color: #ff3b30; }
+
+  /* 비밀번호 입력 - 핀 스타일 */
+  /* 방명록 비밀번호 - 안정형 iOS 입력창 */
+  .gb-password-input {
+    font-size: 16px;
+    text-align: center;
+    letter-spacing: 6px;
+  }
+  .gb-password-input::placeholder { letter-spacing: 0; text-align: left; color: #bbb; }
+  .gb-password-help { font-size: 12px; color: #aaa; margin-top: 6px; line-height: 1.4; }
+
+  /* 공개/비공개 토글 */
+  .gb-privacy {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; background: #f8f7f5; border-radius: 10px;
+    margin-bottom: 14px;
+  }
+  .gb-privacy-label { font-size: 14px; color: #1a1a1a; }
+  .gb-privacy-toggle {
+    width: 36px; height: 20px; border-radius: 99px;
+    background: #ddd; position: relative; cursor: pointer;
+    transition: background 0.2s; border: none;
+  }
+  .gb-privacy-toggle.on { background: #34c759; }
+  .gb-privacy-toggle::after {
+    content: ''; position: absolute;
+    top: 2px; left: 2px; width: 16px; height: 16px;
+    background: #fff; border-radius: 50%;
+    transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .gb-privacy-toggle.on::after { left: 18px; }
+
+  /* 메시지 상세 모달 */
+  .gb-detail-overlay {
+    position: fixed; inset: 0; z-index: 7500;
+    background: #fff;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+    display: flex; flex-direction: column;
+  }
+  .gb-detail-overlay.open { opacity: 1; pointer-events: auto; }
+  .gb-detail-header {
+    padding: 56px 16px 12px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 0.5px solid #e0e0e0;
+  }
+  .gb-detail-back {
+    font-size: 17px; color: #007AFF;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .gb-detail-name {
+    font-size: 17px; font-weight: 600; flex: 1; text-align: center;
+    margin-right: 60px;
+  }
+  .gb-detail-body {
+    flex: 1; padding: 24px 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .gb-detail-bubble {
+    background: #e9e9eb; border-radius: 18px 18px 18px 4px;
+    padding: 12px 16px; max-width: 80%;
+    font-size: 15px; line-height: 1.5; color: #000;
+    align-self: flex-start;
+  }
+  .gb-detail-date {
+    font-size: 12px; color: #8e8e93; text-align: center;
+  }
+  .gb-detail-actions {
+    padding: 16px 20px 40px;
+    display: flex; gap: 10px;
+  }
+  .gb-detail-btn {
+    flex: 1; padding: 13px; border-radius: 12px;
+    font-size: 15px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .gb-detail-btn-edit { background: #f5f4f0; color: #1a1a1a; }
+  .gb-detail-btn-delete { background: #ff3b30; color: #fff; }
+
   .section-fade {
     position: fixed; inset: 0; z-index: 5000;
     background: #000;
@@ -1084,6 +1492,42 @@
   .d13 { animation-delay: 1.85s !important; }
   .d14 { animation-delay: 2.0s  !important; }
   .d15 { animation-delay: 2.15s !important; }
+  /* ════════════════════════════════
+     카카오톡 인앱브라우저 대응
+  ════════════════════════════════ */
+  html, body {
+    width: 100%; height: 100%;
+    overscroll-behavior: none;
+  }
+  .app {
+    height: 100vh;
+    height: 100svh;
+  }
+  #main-section {
+    scroll-snap-type: y mandatory;
+  }
+  .main-slide,
+  .sec2, .sec3, .sec4,
+  .sec5, .sec6, .sec7, .sec8 {
+    min-height: 100vh;
+    scroll-snap-align: start;
+  }
+  .rsvp-input, .gb-input, .gb-textarea {
+    font-size: 16px;
+  }
+  .rsvp-modal, .gb-modal {
+    max-height: 90dvh;
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+  .location-modal {
+    padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+  .floating-menu-btn {
+    bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+  .finder-sidebar {
+    bottom: calc(88px + env(safe-area-inset-bottom));
+  }
 </style>
 </head>
 <body>
@@ -1364,6 +1808,166 @@
       </div>
     </div>
 
+    <!-- ══ 섹션 6 - 인포메이션 ══ -->
+    <div id="sec-info" class="sec6">
+      <div class="sec6-inner">
+
+        <div class="info-section-title anim-fade-up">Information</div>
+
+        <!-- 탭 -->
+        <div class="info-tabs anim-fade-up d1">
+          <button class="info-tab active" onclick="switchInfoTab('parking', this)">🅿️ 주차 안내</button>
+          <button class="info-tab" onclick="switchInfoTab('meal', this)">🍽 연회 식사</button>
+        </div>
+
+        <!-- 주차 안내 -->
+        <div class="info-content active anim-fade-up d2" id="info-parking">
+          <div class="info-card">
+            <div class="info-card-title">🅿️ 주차 안내</div>
+            <div class="info-item">
+              <div class="info-item-icon">🚗</div>
+              <div class="info-item-content">
+                <div class="info-item-label">주차 위치</div>
+                <div class="info-item-desc">지하 1~3층 주차장 이용 가능<br>예식장 정문 또는 후문 진입</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-icon">⏱</div>
+              <div class="info-item-content">
+                <div class="info-item-label">무료 주차</div>
+                <div class="info-item-desc">예식 당일 3시간 무료 제공</div>
+                <span class="info-badge green">3시간 무료</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-icon">🎫</div>
+              <div class="info-item-content">
+                <div class="info-item-label">주차권 수령</div>
+                <div class="info-item-desc">1층 안내 데스크에서<br>주차권 도장 날인 후 출차</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-icon">⚠️</div>
+              <div class="info-item-content">
+                <div class="info-item-label">혼잡 안내</div>
+                <div class="info-item-desc">예식 시간 전후 주차 혼잡 예상<br>대중교통 이용을 권장드립니다</div>
+                <span class="info-badge blue">대중교통 추천</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 연회 식사 안내 -->
+        <div class="info-content" id="info-meal">
+          <div class="info-card">
+            <div class="info-card-title">🍽 연회 식사 안내</div>
+            <div class="info-item">
+              <div class="info-item-icon">📍</div>
+              <div class="info-item-content">
+                <div class="info-item-label">식사 장소</div>
+                <div class="info-item-desc">2층 그랜드 연회장<br>예식홀 바로 아래층</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-icon">🕐</div>
+              <div class="info-item-content">
+                <div class="info-item-label">식사 시간</div>
+                <div class="info-item-desc">예식 종료 후 즉시 입장 가능<br>오후 2시 30분까지 운영</div>
+                <span class="info-badge green">예식 직후 입장</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-icon">🥂</div>
+              <div class="info-item-content">
+                <div class="info-item-label">식사 방식</div>
+                <div class="info-item-desc">뷔페 형식으로 운영됩니다<br>다양한 음식을 자유롭게 즐기실 수 있습니다</div>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-icon">👶</div>
+              <div class="info-item-content">
+                <div class="info-item-label">유아 식사</div>
+                <div class="info-item-desc">어린이 메뉴 별도 준비<br>유아 의자 이용 가능합니다</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ 섹션 7 - 마음 전하실 곳 ══ -->
+    <div id="sec-account" class="sec7">
+      <div class="sec7-inner">
+
+        <div class="account-section-title anim-fade-up">마음 전하실 곳</div>
+        <div class="account-section-subtitle anim-fade-up d1">
+          저희 두 사람의 시작을<br>
+          따뜻한 마음으로 축복해<br>
+          주셔서 감사합니다.<br>
+          <br>
+          참석이 어려우신 분들을 위해<br>
+          조심스레 계좌번호를 안내드리며<br>
+          보내주시는 따뜻한 마음은<br>
+          소중히 간직하겠습니다.
+        </div>
+
+        <!-- 탭 -->
+        <div class="account-tabs anim-fade-up d2">
+          <button class="account-tab active" onclick="switchAccountTab('groom', this)">🤵🏻 신랑측</button>
+          <button class="account-tab" onclick="switchAccountTab('bride', this)">👰🏻‍♀️ 신부측</button>
+        </div>
+
+        <!-- 신랑측 -->
+        <div class="account-content active anim-fade-up d3" id="account-groom">
+          <div class="account-card">
+            <div class="account-name">김정호</div>
+            <button class="account-copy-btn" onclick="copyAccount(event, this, '3333001234567')">복사</button>
+          </div>
+          <div class="account-card">
+            <div class="account-name">김○○ (아버지)</div>
+            <button class="account-copy-btn" onclick="copyAccount(event, this, '123456789012')">복사</button>
+          </div>
+        </div>
+
+        <!-- 신부측 -->
+        <div class="account-content" id="account-bride">
+          <div class="account-card">
+            <div class="account-name">이민지</div>
+            <button class="account-copy-btn" onclick="copyAccount(event, this, '110123456789')">복사</button>
+          </div>
+          <div class="account-card">
+            <div class="account-name">이○○ (아버지)</div>
+            <button class="account-copy-btn" onclick="copyAccount(event, this, '1002345678901')">복사</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ 섹션 8 - 방명록 ══ -->
+    <div id="sec-guestbook" class="sec8">
+      <div class="sec8-inner">
+        <div class="gb-window-card">
+
+          <!-- 아이폰 메시지 헤더 -->
+          <div class="gb-header">
+            <span style="width:40px"></span>
+            <span class="gb-header-title">Guest Book</span>
+            <span style="width:40px"></span>
+          </div>
+
+          <!-- 리스트 -->
+          <div class="gb-list" id="gbList"></div>
+
+        </div>
+
+        <!-- 작성 버튼 -->
+        <button class="gb-compose-btn" onclick="openGbModal()">+</button>
+
+      </div>
+    </div>
+
   </div><!-- /main-section -->
 
 </div><!-- /app -->
@@ -1413,56 +2017,116 @@
 </div>
 
 <!-- RSVP 폼 모달 -->
-<div class="rsvp-modal-overlay" id="rsvpModalOverlay" onclick="closeRsvpModal(event)">
+<div class="rsvp-modal-overlay" id="rsvpModalOverlay">
   <div class="rsvp-modal" id="rsvp-modal">
     <div class="rsvp-modal-handle"></div>
-    <div class="rsvp-modal-title">참석 의사 전달</div>
+    <div class="rsvp-modal-header">
+      <button type="button" onclick="closeRsvpModalDirect()" style="background:none;border:none;font-size:17px;color:#007AFF;cursor:pointer;padding:0;">취소</button>
+      <div class="rsvp-modal-title">참석 의사 전달</div>
+      <button type="button" onclick="submitRsvp()" style="background:none;border:none;font-size:17px;font-weight:600;color:#007AFF;cursor:pointer;padding:0;">등록</button>
+    </div>
 
-    <!-- 신랑/신부측 -->
-    <div class="rsvp-field">
-      <div class="rsvp-side-btns">
-        <button class="rsvp-side-btn" onclick="selectSide(this, 'groom')">🤵🏻 신랑측</button>
-        <button class="rsvp-side-btn" onclick="selectSide(this, 'bride')">👰🏻‍♀️ 신부측</button>
+    <div class="rsvp-form-body">
+      <!-- 신랑/신부측 -->
+      <div class="rsvp-field">
+        <div class="rsvp-side-btns">
+          <button class="rsvp-side-btn" onclick="selectSide(this, 'groom')">🤵🏻 신랑측</button>
+          <button class="rsvp-side-btn" onclick="selectSide(this, 'bride')">👰🏻‍♀️ 신부측</button>
+        </div>
+      </div>
+      <!-- 이름 -->
+      <div class="rsvp-field">
+        <label class="rsvp-label">성함</label>
+        <input class="rsvp-input" type="text" placeholder="이름을 입력해주세요" id="rsvpName" />
+      </div>
+      <!-- 동반 인원 -->
+      <div class="rsvp-field">
+        <label class="rsvp-label">동반 인원 (본인 포함)</label>
+        <div class="rsvp-count-btns">
+          <button class="rsvp-count-btn" onclick="selectCount(this, 1)">1</button>
+          <button class="rsvp-count-btn" onclick="selectCount(this, 2)">2</button>
+          <button class="rsvp-count-btn" onclick="selectCount(this, 3)">3</button>
+          <button class="rsvp-count-btn" onclick="selectCount(this, 4)">4</button>
+          <button class="rsvp-count-btn" onclick="selectCount(this, 5)">5+</button>
+        </div>
+      </div>
+      <!-- 식사 여부 -->
+      <div class="rsvp-field">
+        <label class="rsvp-label">식사 여부</label>
+        <div class="rsvp-meal-btns">
+          <button class="rsvp-meal-btn" onclick="selectMeal(this, 'yes')">🍽 식사할게요</button>
+          <button class="rsvp-meal-btn" onclick="selectMeal(this, 'no')">🙏 괜찮아요</button>
+        </div>
+      </div>
+      <!-- 개인정보 동의 -->
+      <div class="rsvp-agree" onclick="toggleAgree()">
+        <div class="rsvp-agree-check" id="agreeCheck"></div>
+        <div class="rsvp-agree-text">
+          <b>[필수] 개인정보 수집 및 이용 동의</b><br>
+          수집 항목: 성명, 참석 정보 · 목적: 예식 참석 인원 파악 · 보유기간: 예식 종료 후 즉시 삭제
+        </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- 이름 -->
-    <div class="rsvp-field">
-      <label class="rsvp-label">성함</label>
-      <input class="rsvp-input" type="text" placeholder="이름을 입력해주세요" id="rsvpName" />
+<!-- 방명록 작성 모달 -->
+<div class="gb-modal-overlay" id="gbModalOverlay" onclick="closeGbModal(event)">
+  <div class="gb-modal" id="gb-modal">
+    <div class="gb-modal-handle"></div>
+    <div class="gb-modal-header">
+      <button class="gb-modal-cancel" onclick="closeGbModalDirect()">취소</button>
+      <span class="gb-modal-title" id="gbModalTitle">새 메시지</span>
+      <button class="gb-modal-send" id="gbSendBtn" onclick="submitGb()">등록</button>
     </div>
-
-    <!-- 동반 인원 -->
-    <div class="rsvp-field">
-      <label class="rsvp-label">동반 인원 (본인 포함)</label>
-      <div class="rsvp-count-btns">
-        <button class="rsvp-count-btn" onclick="selectCount(this, 1)">1</button>
-        <button class="rsvp-count-btn" onclick="selectCount(this, 2)">2</button>
-        <button class="rsvp-count-btn" onclick="selectCount(this, 3)">3</button>
-        <button class="rsvp-count-btn" onclick="selectCount(this, 4)">4</button>
-        <button class="rsvp-count-btn" onclick="selectCount(this, 5)">5+</button>
-      </div>
+    <div class="gb-field">
+      <label class="gb-label">이름</label>
+      <input class="gb-input" id="gbName" placeholder="이름을 입력해주세요" maxlength="20" />
     </div>
-
-    <!-- 식사 여부 -->
-    <div class="rsvp-field">
-      <label class="rsvp-label">식사 여부</label>
-      <div class="rsvp-meal-btns">
-        <button class="rsvp-meal-btn" onclick="selectMeal(this, 'yes')">🍽 식사할게요</button>
-        <button class="rsvp-meal-btn" onclick="selectMeal(this, 'no')">🙏 괜찮아요</button>
-      </div>
+    <div class="gb-field">
+      <label class="gb-label">메시지 <span class="gb-char-count" id="gbCharCount">0 / 100</span></label>
+      <textarea class="gb-textarea" id="gbMsg" placeholder="축하 메시지를 남겨주세요" maxlength="100" oninput="updateCharCount()"></textarea>
     </div>
-
-    <!-- 개인정보 동의 -->
-    <div class="rsvp-agree" onclick="toggleAgree()">
-      <div class="rsvp-agree-check" id="agreeCheck"></div>
-      <div class="rsvp-agree-text">
-        <b>[필수] 개인정보 수집 및 이용 동의</b><br>
-        수집 항목: 성명, 참석 정보 · 목적: 예식 참석 인원 파악 · 보유기간: 예식 종료 후 즉시 삭제
-      </div>
+    <div class="gb-field">
+      <label class="gb-label">비밀번호</label>
+      <input type="tel" id="gbPinInput" class="gb-input gb-password-input"
+        inputmode="numeric" maxlength="4"
+        autocomplete="off" placeholder="숫자 4자리" oninput="updatePin()" />
+      <div class="gb-password-help">글 수정·삭제 시 사용됩니다</div>
     </div>
+    <div class="gb-privacy">
+      <span class="gb-privacy-label">🔒 비공개로 작성</span>
+      <button class="gb-privacy-toggle" id="gbPrivacyToggle" onclick="this.classList.toggle('on')"></button>
+    </div>
+  </div>
+</div>
 
-    <button class="rsvp-submit-btn" id="rsvpSubmitBtn" onclick="submitRsvp()">확인</button>
+<!-- 방명록 상세 모달 -->
+<div class="gb-detail-overlay" id="gbDetailOverlay">
+  <div class="gb-detail-header">
+    <button class="gb-detail-back" onclick="closeGbDetail()">‹ 메시지</button>
+    <span class="gb-detail-name" id="gbDetailName"></span>
+  </div>
+  <div class="gb-detail-body">
+    <div class="gb-detail-date" id="gbDetailDate"></div>
+    <div class="gb-detail-bubble" id="gbDetailMsg"></div>
+  </div>
+  <div class="gb-detail-actions" id="gbDetailActions"></div>
+</div>
+
+<!-- 비밀번호 확인 팝업 -->
+<div class="rsvp-alert-overlay" id="gbPwOverlay">
+  <div class="rsvp-alert">
+    <div class="rsvp-alert-body">
+      <div class="rsvp-alert-title" id="gbPwTitle">비밀번호 확인</div>
+      <input type="tel" id="gbPwInput" class="gb-input gb-password-input"
+        inputmode="numeric" maxlength="4"
+        autocomplete="off" placeholder="숫자 4자리" oninput="updatePwPin()" style="margin-top:12px;" />
+    </div>
+    <div class="rsvp-alert-btns">
+      <button class="rsvp-alert-btn" onclick="closeGbPw()">취소</button>
+      <button class="rsvp-alert-btn bold" onclick="confirmGbPw()">확인</button>
+    </div>
   </div>
 </div>
 
@@ -1681,6 +2345,250 @@
     }
   });
 
+  // ── 계좌 탭 ──
+  function switchAccountTab(side, el) {
+    document.querySelectorAll('.account-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.account-content').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('account-' + side).classList.add('active');
+  }
+
+  // ── 계좌 펼치기 ──
+  function toggleAccount(card) {
+    card.classList.toggle('open');
+  }
+
+  // ── 계좌 복사 ──
+  function copyAccount(e, btn, number) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(number).then(() => {
+      btn.textContent = '복사됨 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '복사';
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = number;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      btn.textContent = '복사됨 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '복사';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ── 방명록 ──
+  let gbPosts = [];
+  let gbNextId = 1;
+  let gbEditId = null;
+  let gbPwAction = null;
+  let gbPwTargetId = null;
+
+  function renderGbList() {
+    const list = document.getElementById('gbList');
+    list.innerHTML = '';
+    if (gbPosts.length === 0) {
+      list.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#c7c7cc;font-size:14px;gap:8px;padding:40px 0">
+        <div style="font-size:36px">💌</div>
+        <div>아직 메시지가 없어요</div>
+        <div style="font-size:12px">첫 번째 축하 메시지를 남겨주세요</div>
+      </div>`;
+      return;
+    }
+    gbPosts.forEach(post => {
+      const div = document.createElement('div');
+      div.className = 'gb-item' + (post.private ? ' private' : '');
+      div.dataset.id = post.id;
+      div.innerHTML = `
+        <div class="gb-unread-dot"></div>
+        <div class="gb-avatar">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        </div>
+        <div class="gb-item-content">
+          <div class="gb-item-top">
+            <span class="gb-item-name">${post.name}</span>
+            <span class="gb-item-date">${post.date}</span>
+          </div>
+          <div class="gb-item-preview ${post.private ? 'private-msg' : ''}">
+            ${post.private ? '🔒 비공개 메시지' : post.msg}
+          </div>
+        </div>
+        <span class="gb-chevron">›</span>
+        <div class="gb-delete-btn" onclick="swipeDelete(event, ${post.id})">삭제</div>
+      `;
+      div.addEventListener('click', () => openGbDetail(post.id));
+      // 스와이프
+      let startX = 0;
+      div.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      div.addEventListener('touchend', e => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (diff > 60) div.classList.add('swiped');
+        else if (diff < -20) div.classList.remove('swiped');
+      }, { passive: true });
+      list.appendChild(div);
+    });
+  }
+  renderGbList();
+
+  function openGbDetail(id) {
+    const post = gbPosts.find(p => p.id === id);
+    if (!post) return;
+    document.getElementById('gbDetailName').textContent = post.name;
+    document.getElementById('gbDetailDate').textContent = post.date;
+    document.getElementById('gbDetailMsg').textContent = post.private ? '🔒 비공개 메시지입니다.' : post.msg;
+    const actions = document.getElementById('gbDetailActions');
+    actions.innerHTML = `
+      <button class="gb-detail-btn gb-detail-btn-edit" onclick="requestGbAction('edit', ${id})">수정</button>
+      <button class="gb-detail-btn gb-detail-btn-delete" onclick="requestGbAction('delete', ${id})">삭제</button>
+    `;
+    document.getElementById('gbDetailOverlay').classList.add('open');
+  }
+  function closeGbDetail() {
+    document.getElementById('gbDetailOverlay').classList.remove('open');
+  }
+
+  function swipeDelete(e, id) {
+    e.stopPropagation();
+    gbPwAction = 'delete'; gbPwTargetId = id;
+    document.getElementById('gbPwTitle').textContent = '삭제하려면 비밀번호를 입력해주세요';
+    document.getElementById('gbPwInput').value = '';
+    updatePwPin();
+    document.getElementById('gbPwOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('gbPwInput').focus(), 300);
+  }
+
+  function requestGbAction(action, id) {
+    closeGbDetail();
+    gbPwAction = action; gbPwTargetId = id;
+    document.getElementById('gbPwTitle').textContent = action === 'edit' ? '수정하려면 비밀번호를 입력해주세요' : '삭제하려면 비밀번호를 입력해주세요';
+    document.getElementById('gbPwInput').value = '';
+    updatePwPin();
+    setTimeout(() => {
+      document.getElementById('gbPwOverlay').classList.add('open');
+      setTimeout(() => document.getElementById('gbPwInput').focus(), 300);
+    }, 300);
+  }
+
+  function confirmGbPw() {
+    const pw = document.getElementById('gbPwInput').value;
+    const post = gbPosts.find(p => p.id === gbPwTargetId);
+    if (!post || pw !== post.pw) {
+      document.getElementById('gbPwTitle').textContent = '비밀번호가 틀렸습니다 ❌';
+      document.getElementById('gbPwInput').value = '';
+      updatePwPin();
+      return;
+    }
+    closeGbPw();
+    if (gbPwAction === 'delete') {
+      gbPosts = gbPosts.filter(p => p.id !== gbPwTargetId);
+      renderGbList();
+    } else if (gbPwAction === 'edit') {
+      gbEditId = gbPwTargetId;
+      document.getElementById('gbModalTitle').textContent = '메시지 수정';
+      document.getElementById('gbName').value = post.name;
+      document.getElementById('gbMsg').value = post.msg;
+      document.getElementById('gbPinInput').value = post.pw;
+      updatePin();
+      updateCharCount();
+      if (post.private) document.getElementById('gbPrivacyToggle').classList.add('on');
+      else document.getElementById('gbPrivacyToggle').classList.remove('on');
+      document.getElementById('gbModalOverlay').classList.add('open');
+    }
+  }
+  function closeGbPw() {
+    document.getElementById('gbPwOverlay').classList.remove('open');
+  }
+
+  function openGbModal() {
+    gbEditId = null;
+    document.getElementById('gbModalTitle').textContent = '새 메시지';
+    document.getElementById('gbName').value = '';
+    document.getElementById('gbMsg').value = '';
+    document.getElementById('gbPinInput').value = '';
+    document.getElementById('gbPrivacyToggle').classList.remove('on');
+    updatePin(); updateCharCount();
+    document.getElementById('gbModalOverlay').classList.add('open');
+  }
+  function closeGbModal(e) {
+    if (e.target === document.getElementById('gbModalOverlay')) closeGbModalDirect();
+  }
+  function closeGbModalDirect() {
+    document.getElementById('gbModalOverlay').classList.remove('open');
+  }
+
+  function updateCharCount() {
+    const len = document.getElementById('gbMsg').value.length;
+    const el = document.getElementById('gbCharCount');
+    el.textContent = `${len} / 100`;
+    el.classList.toggle('warn', len >= 90);
+  }
+
+  function updatePin() {
+    const input = document.getElementById('gbPinInput');
+    if (!input) return;
+    input.value = input.value.replace(/[^0-9]/g, '').slice(0, 4);
+  }
+  function updatePwPin() {
+    const input = document.getElementById('gbPwInput');
+    if (!input) return;
+    input.value = input.value.replace(/[^0-9]/g, '').slice(0, 4);
+  }
+
+  function submitGb() {
+    const name = document.getElementById('gbName').value.trim();
+    const msg = document.getElementById('gbMsg').value.trim();
+    const pw = document.getElementById('gbPinInput').value.slice(0, 4);
+    const isPrivate = document.getElementById('gbPrivacyToggle').classList.contains('on');
+    if (!name) { alert('이름을 입력해주세요.'); return; }
+    if (!msg) { alert('메시지를 입력해주세요.'); return; }
+    if (pw.length < 4) { alert('비밀번호 4자리를 입력해주세요.'); return; }
+
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}. ${now.getMonth()+1}. ${now.getDate()}.`;
+
+    if (gbEditId) {
+      const idx = gbPosts.findIndex(p => p.id === gbEditId);
+      if (idx !== -1) {
+        gbPosts[idx] = { ...gbPosts[idx], name, msg, pw, private: isPrivate };
+      }
+    } else {
+      gbPosts.unshift({ id: gbNextId++, name, msg, pw, date: dateStr, private: isPrivate });
+    }
+    renderGbList();
+    closeGbModalDirect();
+  }
+
+  function gbStartEdit() { }
+
+  // ── 입력 중 scroll-snap 잠깐 끄기 ──
+  document.querySelectorAll('.gb-input, .gb-textarea, .gb-password-input, .rsvp-input').forEach(el => {
+    el.addEventListener('focus', () => {
+      const main = document.getElementById('main-section');
+      if (main) main.style.scrollSnapType = 'none';
+    });
+    el.addEventListener('blur', () => {
+      setTimeout(() => {
+        const main = document.getElementById('main-section');
+        if (main) main.style.scrollSnapType = 'y mandatory';
+      }, 300);
+    });
+  });
+
+  // ── 인포메이션 탭 ──
+  function switchInfoTab(tab, el) {
+    document.querySelectorAll('.info-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.info-content').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('info-' + tab).classList.add('active');
+  }
+
   // ── RSVP ──
   let rsvpShown = false;
   let rsvpData = { side: null, count: null, meal: null, agree: false };
@@ -1711,9 +2619,12 @@
     }, 200);
   }
   function closeRsvpModal(e) {
-    if (e.target === document.getElementById('rsvpModalOverlay')) {
+    if (e && e.target === document.getElementById('rsvpModalOverlay')) {
       document.getElementById('rsvpModalOverlay').classList.remove('open');
     }
+  }
+  function closeRsvpModalDirect() {
+    document.getElementById('rsvpModalOverlay').classList.remove('open');
   }
 
   function selectSide(el, val) {
@@ -1790,10 +2701,6 @@
   addSwipeClose('location-modal', 'locationModalOverlay', () => {
     document.getElementById('locationModalOverlay').classList.remove('open');
     document.getElementById('location-modal').style.transform = '';
-  });
-  addSwipeClose('rsvp-modal', 'rsvpModalOverlay', () => {
-    document.getElementById('rsvpModalOverlay').classList.remove('open');
-    document.getElementById('rsvp-modal').style.transform = '';
   });
 
   // ── 갤러리 스크롤 그라데이션 ──
